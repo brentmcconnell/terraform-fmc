@@ -88,13 +88,12 @@ resource "azurerm_network_interface" "main" {
 }
 
 # Create a new Virtual Machine based on the Golden Image
-resource "azurerm_linux_virtual_machine" "vm" {
+resource "azurerm_virtual_machine" "vm" {
   name                             = "${local.prefix}-DEVOPS01"
   location                         = local.location 
   resource_group_name              = data.azurerm_resource_group.project-rg.name 
   network_interface_ids            = [azurerm_network_interface.main.id,]
   vm_size                          = "Standard_DS12_v2"
-  admin_username                   = "adminuser"
 
   storage_image_reference {
     id = data.azurerm_image.fmc-img.id
