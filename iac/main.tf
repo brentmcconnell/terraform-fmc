@@ -78,7 +78,6 @@ resource "azurerm_network_interface" "main" {
   name                      = "${local.prefix}-myNIC"
   location                  = local.location 
   resource_group_name       = data.azurerm_resource_group.project-rg.name 
-  network_security_group_id = "${azurerm_network_security_group.main.id}"
 
   ip_configuration {
     name                          = "primary"
@@ -95,8 +94,11 @@ resource "azurerm_virtual_machine" "vm" {
   resource_group_name              = data.azurerm_resource_group.project-rg.name 
   network_interface_ids            = ["${azurerm_network_interface.main.id}"]
   vm_size                          = "Standard_DS12_v2"
+  admin_username                   = "adminuser"
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
+
+  network_interface_ids = [azurerm_network_interface.main.id,]
 
   storage_image_reference {
     id = "${data.azurerm_image.fmc-img.id}"
@@ -107,15 +109,14 @@ resource "azurerm_virtual_machine" "vm" {
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
-}
+  }
 
-  os_profile {
-    computer_name  = "APPVM"
-    admin_username = "admin"
-    admin_password = "admin#2021"
+  admin_ssh_key {
+    username = "adminuser"
+    public_key = file("~/.ssh/id_rsa.pub")
   }
 
   os_profile_linux_config {
-    disable_password_authentication = false
+    disable_password_authentication = true
   }
 }
