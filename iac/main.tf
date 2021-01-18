@@ -78,6 +78,7 @@ resource "azurerm_network_interface" "main" {
   name                      = "${local.prefix}-myNIC"
   location                  = local.location 
   resource_group_name       = data.azurerm_resource_group.project-rg.name 
+  admin_username            = "adminuser"
 
   ip_configuration {
     name                          = "primary"
@@ -89,26 +90,20 @@ resource "azurerm_network_interface" "main" {
 
 # Create a new Virtual Machine based on the Golden Image
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                             = "${local.prefix}-DEVOPS01"
-  location                         = local.location 
-  resource_group_name              = data.azurerm_resource_group.project-rg.name 
-  network_interface_ids            = [azurerm_network_interface.main.id,]
-  size                          = "Standard_DS12_v2"
+  name                              = "${local.prefix}-DEVOPS01"
+  location                          = local.location 
+  resource_group_name               = data.azurerm_resource_group.project-rg.name 
+  size                              = "Standard_DS12_v2"
+  storage_type                      = "Premium"
+  source_image_id                   = data.azurerm_image.fmc-img.id
+  admin_username                    = "admin"
+  admin_password                    = "Password123!"
 
-  storage_image_reference {
-    id = data.azurerm_image.fmc-img.id
+  os_disk {
+    storage_account_type            = "Standard_LRS"
+    caching                         = "ReadWrite"
   }
-
-  storage_os_disk {
-    name              = "${local.prefix}-DEVOPS01-OS"
-    caching           = "ReadWrite"
-    create_option     = "FromImage"
-    managed_disk_type = "Standard_LRS"
-  }
-
-  admin_ssh_key {
-    username = "adminuser"
-    public_key = file("~/.ssh/id_rsa.pub")
-  }
+  
+  network_interface_ids             = [azurerm_network_interface.main.id,]
 
 }
