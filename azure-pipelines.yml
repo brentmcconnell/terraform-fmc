@@ -9,7 +9,7 @@ steps:
 #KEY VAULT TASK
 - task: AzureKeyVault@1
   inputs:
-    azureSubscription: 'TFSTATE-RG-READ-SP-webpage-access'
+    azureSubscription: 'TFSTATE-RG-READ-SP-terraform-fmc'
     KeyVaultName: 'mykeyzvault'
     SecretsFilter: 'sp-client-id-tf-0693,sp-cert-tf-0693,sp-tenant-id-tf-0693,sp-subscription-id-tf-0693,ak-backend-sa-0693'
   displayName: 'Get key vault secrets as pipeline variables'
