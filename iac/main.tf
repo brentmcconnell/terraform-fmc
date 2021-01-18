@@ -48,7 +48,7 @@ resource "azurerm_virtual_network" "main" {
 # Create a Subnet within the Virtual Network
 resource "azurerm_subnet" "internal" {
   name                 = "${local.prefix}-snet-in"
-  virtual_network_name = "${azurerm_virtual_network.main.name}"
+  virtual_network_name = azurerm_virtual_network.main.name
   resource_group_name  = data.azurerm_resource_group.project-rg.name
   address_prefix       = "10.100.2.0/24"
 }
@@ -81,7 +81,7 @@ resource "azurerm_network_interface" "main" {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = "${azurerm_subnet.internal.id}"
+    subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "static"
     private_ip_address            = "${cidrhost("10.100.1.8/24", 4)}"
   }
@@ -92,16 +92,15 @@ resource "azurerm_virtual_machine" "vm" {
   name                             = "${local.prefix}-DEVOPS01"
   location                         = local.location 
   resource_group_name              = data.azurerm_resource_group.project-rg.name 
-  network_interface_ids            = ["${azurerm_network_interface.main.id}"]
+  network_interface_ids            = [azurerm_network_interface.main.id,]
   vm_size                          = "Standard_DS12_v2"
   admin_username                   = "adminuser"
   delete_os_disk_on_termination    = true
   delete_data_disks_on_termination = true
 
-  network_interface_ids = [azurerm_network_interface.main.id,]
 
   storage_image_reference {
-    id = "${data.azurerm_image.fmc-img.id}"
+    id = data.azurerm_image.fmc-img.id
   }
 
   storage_os_disk {
