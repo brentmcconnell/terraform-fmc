@@ -4,7 +4,7 @@ data "azurerm_resource_group" "project-rg" {
 
 data "azurerm_client_config" "current" {}
 
-data "azurerm_image" "fmc_img" {
+data "azurerm_image" "fmc-img" {
   name                = "FMCSequencing"
   resource_group_name = "FMC-RG"
 }
