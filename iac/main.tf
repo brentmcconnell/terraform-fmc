@@ -83,7 +83,7 @@ resource "azurerm_network_interface" "main" {
     name                          = "primary"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "static"
-    private_ip_address            = "${cidrhost("10.100.1.8/24", 4)}"
+    private_ip_address            = "${cidrhost("10.100.2.5/24", 4)}"
   }
 }
 
