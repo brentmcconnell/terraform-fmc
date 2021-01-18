@@ -78,7 +78,6 @@ resource "azurerm_network_interface" "main" {
   name                      = "${local.prefix}-myNIC"
   location                  = local.location 
   resource_group_name       = data.azurerm_resource_group.project-rg.name 
-  admin_username            = "adminuser"
 
   ip_configuration {
     name                          = "primary"
