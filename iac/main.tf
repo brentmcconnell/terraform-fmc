@@ -93,7 +93,6 @@ resource "azurerm_linux_virtual_machine" "vm" {
   location                          = local.location 
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
   size                              = "Standard_DS12_v2"
-  storage_type                      = "Premium"
   source_image_id                   = data.azurerm_image.fmc-img.id
   admin_username                    = "admin"
   admin_password                    = "Password123!"
