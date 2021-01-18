@@ -1,5 +1,6 @@
 terraform {
   required_version = ">=0.12.6"
+  skip_provider_registration = true
   backend "azurerm" {
     storage_account_name    = "tfstateacct0693"
     container_name          = "tfcont-0693"
