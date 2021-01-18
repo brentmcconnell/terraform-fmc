@@ -6,5 +6,5 @@ data "azurerm_client_config" "current" {}
 
 data "azurerm_image" "fmc-img" {
   name                = "FMCSequencing"
-  resource_group_name = "FMC-RG"
+  resource_group_name = "Images"
 }
