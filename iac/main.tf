@@ -95,7 +95,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   size                              = "Standard_DS12_v2"
   source_image_id                   = data.azurerm_image.fmc-img.id
   disable_password_authentication   = false
-  admin_username                    = "admin"
+  admin_username                    = "adminuser"
   admin_password                    = "Password123!"
 
   os_disk {
