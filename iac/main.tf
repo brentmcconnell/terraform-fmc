@@ -98,7 +98,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
   
   network_interface_ids             = [azurerm_network_interface.main.id,]
-
+  depends_on                        = [azure_managed_disk.data-disk]
 }
 
 resource "azurerm_managed_disk" "data-disk" {
