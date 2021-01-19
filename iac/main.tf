@@ -101,16 +101,17 @@ resource "azurerm_linux_virtual_machine" "vm" {
 }
 
 resource "azurerm_managed_disk" "data-disk" {
-  name                 = "${local.prefix}-datadisk1"
-  resource_group_name  = data.azurerm_resource_group.project-rg.name
-  location             = local.location 
-  storage_account_type = "Premium_LRS"
-  create_option        = "Empty"
-  disk_size_gb         = 16000
+  name                  = "${local.prefix}-datadisk1"
+  resource_group_name   = data.azurerm_resource_group.project-rg.name
+  location              = local.location 
+  storage_account_type  = "Premium_LRS"
+  create_option         = "Empty"
+  disk_size_gb          = 16000
 }
 
 resource "azurerm_virtual_machine_data_disk_attachment" "example" {
-  managed_disk_id    = azurerm_managed_disk.data-disk.id
-  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
-  lun                = "10"
+  managed_disk_id       = azurerm_managed_disk.data-disk.id
+  virtual_machine_id    = azurerm_linux_virtual_machine.vm.id
+  lun                   = "10"
+  caching               = "None"
 }
