@@ -3,20 +3,20 @@
 package_upgrade: true
 
 disk_setup:
-  /dev/sdc:
-    table_type: 'mbr'
+  /dev/disk/azure/scsi1/lun10:
+    table_type: 'gpt'
     layout:
       - 100
     overwrite: true
 
 fs_setup:
   - label: data
+    device: '/dev/disk/azure/scsi1/lun10'
     filesystem: 'ext4'
-    device: '/dev/sdc1'
-    partition: auto
+    partition: 1
 
 mounts:
-  - [ sdc1, /data ]
+  - [ "/dev/disk/azure/scsi1/lun0-part1", "/data", auto, "defaults,noexec,nofail" ]
 
 packages:
   - build-essential
