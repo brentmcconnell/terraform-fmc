@@ -3,7 +3,16 @@
 package_upgrade: true
 
 mounts:
-  - [ sdc, /opt/data ]
+  - [ sdc, /data ]
+
+fs_setup:
+  - label: data
+    filesystem: 'ext4'
+    device: '/dev/sdc'
+    partition: auto
+
+runcmd:
+  - mkdir /data
 
 packages:
   - build-essential
