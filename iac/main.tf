@@ -90,6 +90,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   disable_password_authentication   = false
   admin_username                    = "adminuser"
   admin_password                    = "Password123!"
+  custom_data                       = data.template_file.cloud_init.rendered
 
   os_disk {
     storage_account_type            = "Standard_LRS"
@@ -115,3 +116,4 @@ resource "azurerm_virtual_machine_data_disk_attachment" "example" {
   lun                   = "10"
   caching               = "None"
 }
+
