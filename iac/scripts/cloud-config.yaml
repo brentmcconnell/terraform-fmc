@@ -2,17 +2,21 @@
 
 package_upgrade: true
 
-mounts:
-  - [ sdc, /data ]
+disk_setup:
+  /dev/sdc:
+    table_type: 'mbr'
+    layout:
+      - 100
+    overwrite: true
 
 fs_setup:
   - label: data
     filesystem: 'ext4'
-    device: '/dev/sdc'
+    device: '/dev/sdc1'
     partition: auto
 
-runcmd:
-  - mkdir /data
+mounts:
+  - [ sdc1, /data ]
 
 packages:
   - build-essential
