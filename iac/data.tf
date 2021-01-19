@@ -9,6 +9,10 @@ data "azurerm_image" "fmc-img" {
   resource_group_name = "Images"
 }
 
+# data "template_file" "cloud_init" {
+#   template = file("${path.module}/scripts/cloud-init.tpl")
+#} 
+
 data "template_file" "cloud_init" {
-  template = file("${path.module}/scripts/cloud-init.tpl")
+  template = file("${path.module}/scripts/cloud-config.yaml")
 }

@@ -1,0 +1,7 @@
+package_upgrade: true
+
+mounts:
+  - [ sdc, /opt/data ]
+
+packages:
+  - build-essential
