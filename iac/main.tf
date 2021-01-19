@@ -11,32 +11,6 @@ locals {
   }
 }
 
-
-resource "azurerm_key_vault" "vault" {
-  name                  = replace(local.vault_name, "-", "")
-  location              = local.location
-  resource_group_name   = data.azurerm_resource_group.project-rg.name
-  sku_name              = "standard"
-  tenant_id             = data.azurerm_client_config.current.tenant_id
-  tags                  = local.tags
-
-
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-
-    key_permissions = [
-      "get","list","create","delete","encrypt","decrypt","unwrapKey","wrapKey"
-    ]
-
-    secret_permissions = [
-      "get","list","set","delete"
-    ]
-
-  }
-
-}
-
 # Create a Virtual Network within the Resource Group
 resource "azurerm_virtual_network" "main" {
   name                = "${local.prefix}-Vnet"
@@ -124,4 +98,20 @@ resource "azurerm_linux_virtual_machine" "vm" {
   
   network_interface_ids             = [azurerm_network_interface.main.id,]
 
+}
+
+resource "azurerm_managed_disk" "data-disk" {
+  name                 = "${local.prefix}-datadisk1"
+  resource_group_name  = data.azurerm_resource_group.project-rg.name
+  location             = local.location 
+  storage_account_type = "Premium_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = 16000
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "example" {
+  managed_disk_id    = azurerm_managed_disk.data-disk.id
+  virtual_machine_id = azurerm_linux_virtual_machine.vm.id
+  lun                = "10"
+  caching            = "ReadWrite"
 }
