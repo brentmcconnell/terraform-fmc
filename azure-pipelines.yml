@@ -44,5 +44,5 @@ steps:
     cat ./ssh_key
     VM_IP=$(terraform output vm_ip)
     echo $VM_IP
-    ssh -i ./ssh_key azureuser@$VM_IP 'hostname; ip addr'
+    ssh -i ./ssh_key azureuser@$VM_IP
   displayName: 'Terraform Init, Plan and Apply '
