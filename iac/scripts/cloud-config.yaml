@@ -16,7 +16,7 @@ fs_setup:
     partition: 1
 
 mounts:
-  - [ "/dev/disk/azure/scsi1/lun0-part1", "/data", auto, "defaults,noexec,nofail" ]
+  - [ "/dev/disk/azure/scsi1/lun10-part1", "/data", auto, "defaults,noexec,nofail" ]
 
 packages:
   - build-essential
