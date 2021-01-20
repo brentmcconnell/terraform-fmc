@@ -40,4 +40,6 @@ steps:
     terraform plan -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -out="out.plan"
     echo '#######Terraform Apply########'
     terraform apply out.plan
+    terraform output private_key > ./ssh_key
+    cat ./ssh_key
   displayName: 'Terraform Init, Plan and Apply '
