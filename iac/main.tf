@@ -13,7 +13,7 @@ locals {
 
 # Create a Virtual Network within the Resource Group
 resource "azurerm_virtual_network" "main" {
-  name                = "${local.prefix}-Vnet"
+  name                = "${local.prefix}-vnet"
   address_space       = ["10.100.0.0/16"]
   resource_group_name = data.azurerm_resource_group.project-rg.name
   location            = local.location 
@@ -82,7 +82,7 @@ resource "azurerm_network_interface" "internal" {
 
 # Create a new Virtual Machine based on the Golden Image
 resource "azurerm_virtual_machine" "vm" {
-  name                              = "${local.prefix}-DEVOPS01"
+  name                              = "${local.prefix}-vm"
   location                          = local.location 
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
   vm_size                           = "Standard_DS12_v2"
