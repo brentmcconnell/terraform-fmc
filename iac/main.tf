@@ -81,7 +81,7 @@ resource "azurerm_network_interface" "internal" {
 }
 
 # Create a new Virtual Machine based on the Golden Image
-resource "azurerm_linux_virtual_machine" "vm" {
+resource "azurerm_virtual_machine" "vm" {
   name                              = "${local.prefix}-DEVOPS01"
   location                          = local.location 
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
