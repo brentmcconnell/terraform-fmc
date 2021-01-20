@@ -46,10 +46,10 @@ steps:
 - script: |
     set -x 
     cd iac
-    ls -la
     terraform output -json private_key | jq -r . > ssh_key; chmod 0600 ssh_key
     terraform output -json vm_ip | jq -r . > vm_ip_address
-    IP=$(cat ./vm_ip_address)
+    ls -la
+    cat ssh_key
     ssh -i ssh_key azureuser@$(cat ./vm_ip_address)
   displayName: 'Run the job'
 
