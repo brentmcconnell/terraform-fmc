@@ -86,10 +86,8 @@ resource "azurerm_virtual_machine" "vm" {
   location                          = local.location 
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
   vm_size                           = "Standard_DS12_v2"
-  disable_password_authentication   = false
-  custom_data                       = base64encode(data.template_file.cloud_init.rendered)
 
-  source_image_reference {
+  storage_image_reference {
     id = data.azurerm_image.fmc-img.id 
   }
 
@@ -97,11 +95,12 @@ resource "azurerm_virtual_machine" "vm" {
     name                            = "os"
     managed_disk_type               = "Standard_LRS"
     caching                         = "ReadWrite"
+    create_option                   = "Create"
   }
 
   storage_data_disk {
     name                            = "data"
-    create_option                   = "Attach"
+    create_option                   = "Create"
     lun                             = 10
     managed_disk_type               = "Premium_LRS"
     disk_size_gb                    = 16000
@@ -112,12 +111,14 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   os_profile {
+    computer_name  = "fmcsequencing"
     admin_username = "adminuser"
     admin_password = "Password123!"
+    custom_data    = base64encode(data.template_file.cloud_init.rendered)
   }
   
   network_interface_ids             = [azurerm_network_interface.main.id,]
-  depends_on                        = [azure_managed_disk.data-disk]
+  #depends_on                        = [azure_managed_disk.data-disk]
 }
 
 # resource "azurerm_managed_disk" "data-disk" {
