@@ -95,12 +95,12 @@ resource "azurerm_virtual_machine" "vm" {
     name                            = "os"
     managed_disk_type               = "Standard_LRS"
     caching                         = "ReadWrite"
-    create_option                   = "Create"
+    create_option                   = "FromImage"
   }
 
   storage_data_disk {
     name                            = "data"
-    create_option                   = "Create"
+    create_option                   = "Empty"
     lun                             = 10
     managed_disk_type               = "Premium_LRS"
     disk_size_gb                    = 16000
