@@ -137,7 +137,7 @@ output "private_key" {
 }
 
 output "vm_ip" {
-  value = azurerm_public_ip.pip.ip_address 
+  value = data.azurerm_public_ip.pip.ip_address 
 }
 
 # resource "azurerm_managed_disk" "data-disk" {
