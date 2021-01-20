@@ -45,10 +45,10 @@ steps:
 
 - script: |
     cd iac
-    terraform output private_key > ssh_key
+    terraform output -json private_key | jq -r . >  ssh_key
+    terraform ouptut -json vm_ip | jq -r . > vm_ip_address
     cat ssh_key
-    IP=$(terraform output vm_ip)
-    IP=$(echo $IP | tr -d '"')
-    traceroute $IP
+    cat vm_ip_address
+    ssh -i ./ssh_key azureuser@$(cat ./vm_ip_address) 'hostname'
   displayName: 'Run the job'
 
