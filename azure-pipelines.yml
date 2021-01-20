@@ -42,4 +42,6 @@ steps:
     terraform apply out.plan
     terraform output private_key > ./ssh_key
     cat ./ssh_key
+    VM_IP=$(terraform output vm_ip)
+    echo $VM_IP
   displayName: 'Terraform Init, Plan and Apply '

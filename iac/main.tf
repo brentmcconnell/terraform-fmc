@@ -136,6 +136,10 @@ output "private_key" {
   value = tls_private_key.bootstrap_private_key.private_key_pem
 }
 
+output "vm_ip" {
+  value = azurerm_public_ip.pip.ip_address 
+}
+
 # resource "azurerm_managed_disk" "data-disk" {
 #   name                  = "${local.prefix}-datadisk1"
 #   resource_group_name   = data.azurerm_resource_group.project-rg.name
