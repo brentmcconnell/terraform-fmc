@@ -43,6 +43,7 @@ steps:
   displayName: 'Terraform Init, Plan and Apply '
 
 - script: |
-    terraform output -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" private_key
+    cd iac
+    terraform output private_key 
   displayName: 'Run the job'
 
