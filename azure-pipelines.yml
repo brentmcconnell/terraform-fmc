@@ -43,10 +43,6 @@ steps:
   displayName: 'Terraform Init, Plan and Apply '
 
 - script: |
-    terraform output private_key > ./ssh_key
-    cat ./ssh_key
-    VM_IP=$(terraform output vm_ip)
-    echo $VM_IP
-    ssh -i ./ssh_key azureuser@$VM_IP
+    terraform output -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" private_key
   displayName: 'Run the job'
 
