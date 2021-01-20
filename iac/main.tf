@@ -115,10 +115,10 @@ resource "azurerm_virtual_machine" "vm" {
 
   os_profile_linux_config {
     disable_password_authentication = false
-    ssh_keys = [{
-      path   = "/home/adminuser/.ssh/authorized_keys"
-      key_data = "${chomp(tls_private_key.bootstrap_private_key.public_key_openssh)}"
-    }]
+    ssh_keys {
+      path      = "/home/adminuser/.ssh/authorized_keys"
+      key_data  = "${chomp(tls_private_key.bootstrap_private_key.public_key_openssh)}"
+    }
   }
 
   os_profile {
