@@ -92,14 +92,14 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   storage_os_disk {
-    name                            = "os"
+    name                            = "${local.prefix}-os"
     managed_disk_type               = "Standard_LRS"
     caching                         = "ReadWrite"
     create_option                   = "FromImage"
   }
 
   storage_data_disk {
-    name                            = "data"
+    name                            = "${local.prefix}-data"
     create_option                   = "Empty"
     lun                             = 10
     managed_disk_type               = "Premium_LRS"
