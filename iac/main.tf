@@ -11,6 +11,7 @@ locals {
   }
 }
 
+
 # Create a Virtual Network within the Resource Group
 resource "azurerm_virtual_network" "main" {
   name                = "${local.prefix}-vnet"
@@ -80,6 +81,12 @@ resource "azurerm_network_interface" "internal" {
   }
 }
 
+# TEMPORARY UNTIL BETTER SOLUTION IS IMPLEMENTED
+resource "tls_private_key" "bootstrap_private_key" {
+    algorithm = "RSA"
+    rsa_bits  = "4096"
+}
+
 # Create a new Virtual Machine based on the Golden Image
 resource "azurerm_virtual_machine" "vm" {
   name                              = "${local.prefix}-vm"
@@ -108,6 +115,10 @@ resource "azurerm_virtual_machine" "vm" {
 
   os_profile_linux_config {
     disable_password_authentication = false
+    ssh_keys = [{
+      path   = "/home/adminuser/.ssh/authorized_keys"
+      key_data = "${chomp(tls_private_key.bootstrap_private_key.public_key_openssh)}"
+    }]
   }
 
   os_profile {
@@ -119,6 +130,10 @@ resource "azurerm_virtual_machine" "vm" {
   
   network_interface_ids             = [azurerm_network_interface.main.id,]
   #depends_on                        = [azure_managed_disk.data-disk]
+}
+
+output "private_key" {
+  value = tls_private_key.bootstrap_private_key.private_key_pem
 }
 
 # resource "azurerm_managed_disk" "data-disk" {
