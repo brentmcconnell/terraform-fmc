@@ -45,8 +45,8 @@ steps:
 
 - script: |
     cd iac
-    terraform output -json private_key | jq -r
-    terraform ouptut -json vm_ip | jq -r
+    terraform output -json private_key | jq -r .
+    terraform ouptut -json vm_ip | jq -r .
     #cat ssh_key
     #cat vm_ip_address
     #ssh -i ./ssh_key azureuser@$(cat ./vm_ip_address) 'hostname'
