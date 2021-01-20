@@ -116,14 +116,14 @@ resource "azurerm_virtual_machine" "vm" {
   os_profile_linux_config {
     disable_password_authentication = false
     ssh_keys {
-      path      = "/home/adminuser/.ssh/authorized_keys"
+      path      = "/home/azureuser/.ssh/authorized_keys"
       key_data  = "${chomp(tls_private_key.bootstrap_private_key.public_key_openssh)}"
     }
   }
 
   os_profile {
     computer_name  = "fmcsequencing"
-    admin_username = "adminuser"
+    admin_username = "azureuser"
     admin_password = "Password123!"
     custom_data    = base64encode(data.template_file.cloud_init.rendered)
   }
