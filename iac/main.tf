@@ -85,35 +85,48 @@ resource "azurerm_linux_virtual_machine" "vm" {
   name                              = "${local.prefix}-DEVOPS01"
   location                          = local.location 
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
-  size                              = "Standard_DS12_v2"
-  source_image_id                   = data.azurerm_image.fmc-img.id
+  vm_size                           = "Standard_DS12_v2"
   disable_password_authentication   = false
-  admin_username                    = "adminuser"
-  admin_password                    = "Password123!"
   custom_data                       = base64encode(data.template_file.cloud_init.rendered)
 
-  os_disk {
-    storage_account_type            = "Standard_LRS"
+  source_image_reference {
+    id = data.azurerm_image.fmc-img.id 
+  }
+
+  storage_os_disk {
+    name                            = "os"
+    managed_disk_type               = "Standard_LRS"
     caching                         = "ReadWrite"
+  }
+
+  storage_data_disk {
+    name                            = "data"
+    create_option                   = "Attach"
+    lun                             = 10
+    managed_disk_type               = "Premium_LRS"
+    disk_size_gb                    = 16000
+  }
+
+  os_profile_linux_config {
+    disable_password_authentication = false
+  }
+
+  os_profile {
+    admin_username = "adminuser"
+    admin_password = "Password123!"
   }
   
   network_interface_ids             = [azurerm_network_interface.main.id,]
   depends_on                        = [azure_managed_disk.data-disk]
 }
 
-resource "azurerm_managed_disk" "data-disk" {
-  name                  = "${local.prefix}-datadisk1"
-  resource_group_name   = data.azurerm_resource_group.project-rg.name
-  location              = local.location 
-  storage_account_type  = "Premium_LRS"
-  create_option         = "Empty"
-  disk_size_gb          = 16000
-}
+# resource "azurerm_managed_disk" "data-disk" {
+#   name                  = "${local.prefix}-datadisk1"
+#   resource_group_name   = data.azurerm_resource_group.project-rg.name
+#   location              = local.location 
+#   storage_account_type  = "Premium_LRS"
+#   create_option         = "Empty"
+#   disk_size_gb          = 16000
+# }
 
-resource "azurerm_virtual_machine_data_disk_attachment" "example" {
-  managed_disk_id       = azurerm_managed_disk.data-disk.id
-  virtual_machine_id    = azurerm_linux_virtual_machine.vm.id
-  lun                   = "10"
-  caching               = "None"
-}
 
