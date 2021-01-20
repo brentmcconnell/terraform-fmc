@@ -44,9 +44,11 @@ steps:
   displayName: 'Terraform Init, Plan and Apply '
 
 - script: |
+    set -x 
     cd iac
     terraform output -json private_key | jq -r . > ssh_key; chmod 0600 ssh_key
     terraform output -json vm_ip | jq -r . > vm_ip_address
-    ssh -i ssh_key azureuser@$(cat ./vm_ip_address) 'hostname'
+    IP=$(cat ./vm_ip_address)
+    ssh -i ssh_key azureuser@$IP 'hostname'
   displayName: 'Run the job'
 
