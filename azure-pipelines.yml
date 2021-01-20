@@ -17,7 +17,7 @@ steps:
 # TERRAFORM VERSION
 - script: |
     terraform version
-    apt-get install traceroute
+    sudo apt-get install traceroute
   displayName: 'Get Terraform Version'
 
 - script: |
