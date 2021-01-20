@@ -44,6 +44,8 @@ steps:
 
 - script: |
     cd iac
-    terraform output private_key 
+    terraform output private_key > ssh_key
+    IP=$(terraform output vm_ip)
+    traceroute $IP
   displayName: 'Run the job'
 
