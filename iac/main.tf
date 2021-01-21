@@ -52,7 +52,7 @@ resource "azurerm_public_ip" "pip" {
   name                = "${local.prefix}-pip"
   resource_group_name = data.azurerm_resource_group.project-rg.name
   location            = local.location
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
 }
 
 resource "azurerm_network_interface" "main" {
