@@ -129,8 +129,20 @@ resource "azurerm_virtual_machine" "vm" {
   }
   
   network_interface_ids             = [azurerm_network_interface.main.id,]
-  #depends_on                        = [azure_managed_disk.data-disk]
+  
+  provisioner "remote-exec" {
+    inline = [
+      "hostname"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = tls_private_key.bootstrap_private_key.private_key_pem
+      host        = data.azurerm_public_ip.pip.ip_address
+    }
+  }
 }
+
 
 output "private_key" {
   value = tls_private_key.bootstrap_private_key.private_key_pem
