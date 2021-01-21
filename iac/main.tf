@@ -92,7 +92,7 @@ resource "azurerm_virtual_machine" "vm" {
   name                              = "${local.prefix}-vm"
   location                          = local.location 
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
-  vm_size                           = "Standard_D96as_v4"
+  vm_size                           = "Standard_D64as_v4"
 
   storage_image_reference {
     id = data.azurerm_image.fmc-img.id 
