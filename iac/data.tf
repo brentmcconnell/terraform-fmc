@@ -15,5 +15,5 @@ data "azurerm_public_ip" "pip" {
 }
 
 data "template_file" "cloud_init" {
-  template = file("${path.module}/scripts/cloud-config.yaml")
+  template = file("${path.module}/cloud-init/cloud-config.yaml")
 }
