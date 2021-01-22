@@ -1,6 +1,6 @@
 #!/bin/bash
-
-conda create -n denovo_asm
+conda init bash
+conda create --yes -n denovo_asm
 conda activate denovo_asm
 cd /data/input
 wget --progress=bar:force:noscroll https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641
