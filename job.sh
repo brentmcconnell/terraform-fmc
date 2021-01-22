@@ -3,7 +3,7 @@
 conda init bash
 source /home/azureuser/.bashrc
 conda create --yes -n denovo_asm
-conda activate denovo_asm
+source activate denovo_asm
 cd /data/input
 wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641
 
