@@ -4,7 +4,6 @@ conda init bash
 conda create --yes -n denovo_asm
 source activate denovo_asm
 cd /data/input
-wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641
 
 # check to see if file already exists and delete
 if [ -f ./DRR213641 ]; then
@@ -17,6 +16,8 @@ if [ -f ./DRR213641.fastq ]; then
   echo "Removing existing fastq file"
   rm ./DRR213641.fastq
 fi
+
+wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641
 
 fasterq-dump ./DRR213641
 
