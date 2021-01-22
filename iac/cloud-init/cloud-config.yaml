@@ -22,6 +22,7 @@ runcmd:
  - [ mkdir, /data/input ]
  - [ mkdir, /data/runs ] 
  - [ chown, -R, "azureuser:azureuser", /data ]
+ - [ chown, -R, "azureuser:azureuser", /home/azureuser ]
 
 write_files:
 - path: /home/azureuser/.ncbi/user-settings.mkfg
