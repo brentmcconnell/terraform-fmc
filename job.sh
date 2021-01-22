@@ -1,7 +1,6 @@
 #!/bin/bash
 
 conda init bash
-source /home/azureuser/.bashrc
 conda create --yes -n denovo_asm
 source activate denovo_asm
 cd /data/input
