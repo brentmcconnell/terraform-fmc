@@ -1,54 +1,57 @@
-variables:
-  TF_STORAGE_ACCT_NAME: tfstateacct0693
-  TF_STORAGE_CONT_NAME: tfcont-0693 
-  TF_STATE_FILE: terraform.tfstate 
-pool:
-  vmImage: 'ubuntu-latest'
-steps:
+jobs:
+- job: sequencing
+  timeoutInMinutes: 0
+  variables:
+    TF_STORAGE_ACCT_NAME: tfstateacct0693
+    TF_STORAGE_CONT_NAME: tfcont-0693 
+    TF_STATE_FILE: terraform.tfstate 
+  pool:
+    vmImage: 'ubuntu-latest'
+  steps:
 
-#KEY VAULT TASK
-- task: AzureKeyVault@1
-  inputs:
-    azureSubscription: 'TFSTATE-RG-READ-SP-terraform-fmc'
-    KeyVaultName: 'mykeyzvault'
-    SecretsFilter: 'sp-client-id-tf-0693,sp-cert-tf-0693,sp-tenant-id-tf-0693,sp-subscription-id-tf-0693,ak-backend-sa-0693'
-  displayName: 'Get key vault secrets as pipeline variables'
+  #KEY VAULT TASK
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: 'TFSTATE-RG-READ-SP-terraform-fmc'
+      KeyVaultName: 'mykeyzvault'
+      SecretsFilter: 'sp-client-id-tf-0693,sp-cert-tf-0693,sp-tenant-id-tf-0693,sp-subscription-id-tf-0693,ak-backend-sa-0693'
+    displayName: 'Get key vault secrets as pipeline variables'
 
-# TERRAFORM VERSION
-- script: |
-    terraform version
-    sudo apt-get install traceroute
-  displayName: 'Get Terraform Version'
+  # TERRAFORM VERSION
+  - script: |
+      terraform version
+      sudo apt-get install traceroute
+    displayName: 'Get Terraform Version'
 
-- script: |
-    echo "$(sp-cert-tf-0693)" > service-principal.pfx.b64
-    base64 --decode service-principal.pfx.b64 > service-principal.pfx
-    openssl pkcs12 -in service-principal.pfx -out service-principal.pem -nodes -passin pass:
-    cat service-principal.pem
-    ls -la
-  displayName: 'What is in the cert variable?'
+  - script: |
+      echo "$(sp-cert-tf-0693)" > service-principal.pfx.b64
+      base64 --decode service-principal.pfx.b64 > service-principal.pfx
+      openssl pkcs12 -in service-principal.pfx -out service-principal.pem -nodes -passin pass:
+      cat service-principal.pem
+      ls -la
+    displayName: 'What is in the cert variable?'
 
-# AZ LOGIN USING TERRAFORM SERVICE PRINCIPAL
-- script: |
-    az login --service-principal -u "$(sp-client-id-tf-0693)" -p "service-principal.pem" --tenant "$(sp-tenant-id-tf-0693)"
-  displayName: 'Login the az cli'
+  # AZ LOGIN USING TERRAFORM SERVICE PRINCIPAL
+  - script: |
+      az login --service-principal -u "$(sp-client-id-tf-0693)" -p "service-principal.pem" --tenant "$(sp-tenant-id-tf-0693)"
+    displayName: 'Login the az cli'
 
-- script: |
-    cd iac
-    echo '#######Terraform Init########'
-    terraform init -backend-config="storage_account_name=$(TF_STORAGE_ACCT_NAME)" -backend-config="container_name=$(TF_STORAGE_CONT_NAME)" -backend-config="access_key=$(ak-backend-sa-0693)" -backend-config="key=$(TF_STATE_FILE)"
-    echo '#######Terraform Plan########'
-    terraform plan -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -out="out.plan"
-    echo '#######Terraform Apply########'
-    terraform apply out.plan
-  displayName: 'Terraform Init, Plan and Apply '
+  - script: |
+      cd iac
+      echo '#######Terraform Init########'
+      terraform init -backend-config="storage_account_name=$(TF_STORAGE_ACCT_NAME)" -backend-config="container_name=$(TF_STORAGE_CONT_NAME)" -backend-config="access_key=$(ak-backend-sa-0693)" -backend-config="key=$(TF_STATE_FILE)"
+      echo '#######Terraform Plan########'
+      terraform plan -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -out="out.plan"
+      echo '#######Terraform Apply########'
+      terraform apply out.plan
+    displayName: 'Terraform Init, Plan and Apply '
 
-- script: |
-    set -x  
-    cd iac
-    terraform output -json private_key | jq -r . > ssh_key; chmod 0600 ssh_key
-    terraform output -json vm_ip | jq -r . > vm_ip_address
-    # Run the job script on the remote agent
-    cat ../job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
-  displayName: 'Run the sequencing job'
+  - script: |
+      set -x  
+      cd iac
+      terraform output -json private_key | jq -r . > ssh_key; chmod 0600 ssh_key
+      terraform output -json vm_ip | jq -r . > vm_ip_address
+      # Run the job script on the remote agent
+      cat ../job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+    displayName: 'Run the sequencing job'
 
