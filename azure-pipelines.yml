@@ -1,5 +1,6 @@
 jobs:
 - job: sequencing
+  pool: ubuntu-18.04
   timeoutInMinutes: 0
   variables:
     TF_STORAGE_ACCT_NAME: tfstateacct0693
