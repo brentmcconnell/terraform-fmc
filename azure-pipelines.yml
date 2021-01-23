@@ -1,13 +1,12 @@
 jobs:
 - job: sequencing
-  pool: ubuntu-18.04
   timeoutInMinutes: 0
   variables:
     TF_STORAGE_ACCT_NAME: tfstateacct0693
     TF_STORAGE_CONT_NAME: tfcont-0693 
     TF_STATE_FILE: terraform.tfstate 
-  pool:
-    vmImage: 'ubuntu-latest'
+  pool: ubuntu-18.04
+  #vmImage: 'ubuntu-latest'
   steps:
 
   #KEY VAULT TASK
