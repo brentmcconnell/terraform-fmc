@@ -14,3 +14,4 @@ cat << EOF > /home/azureuser/.ncbi/user-settings.mkfg
 /repository/user/default-path = "/home/azureuser/ncbi"
 EOF
 chown -R azureuser:azureuser /home/azureuser
+mkdir /data  && chown -R azureuser:azureuser /data
