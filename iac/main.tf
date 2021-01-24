@@ -133,6 +133,12 @@ resource "azurerm_virtual_machine" "vm" {
   provisioner "file" {
     source      = "scripts/initialize.sh"
     destination = "/tmp/initialize.sh"
+    connection {
+      type        = "ssh"
+      user        = "azureuser"
+      private_key = tls_private_key.bootstrap_private_key.private_key_pem
+      host        = data.azurerm_public_ip.pip.ip_address
+    }
   }
 
   provisioner "remote-exec" {
