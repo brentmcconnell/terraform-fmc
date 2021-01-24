@@ -137,7 +137,7 @@ resource "azurerm_virtual_machine" "vm" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /tmp/initialize.sh"
+      "chmod +x /tmp/initialize.sh",
       "/tmp/initialize.sh"
     ]
     connection {
