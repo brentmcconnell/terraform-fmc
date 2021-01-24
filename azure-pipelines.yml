@@ -6,7 +6,8 @@ jobs:
     TF_STORAGE_CONT_NAME: tfcont-0693 
     TF_STATE_FILE: terraform.tfstate 
   #pool: ubuntu-18.04-vmss
-  vmImage: 'ubuntu-latest'
+  pool:
+    vmImage: 'ubuntu-latest'
   steps:
 
   #KEY VAULT TASK
