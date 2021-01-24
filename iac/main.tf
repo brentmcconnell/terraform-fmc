@@ -112,6 +112,7 @@ resource "azurerm_virtual_machine" "vm" {
     managed_disk_type               = "Premium_LRS"
     disk_size_gb                    = 16000
   }
+  delete_data_disks_on_termination  = true
 
   os_profile_linux_config {
     disable_password_authentication = false
