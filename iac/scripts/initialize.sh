@@ -1,7 +1,11 @@
 #!/bin/bash
 
 useradd azureuser
-mkdir /home/azureuser/.ncbi
+
+if ! [ -d /home/azureuser/.ncbi ]; then
+  mkdir -p /home/azureuser/.ncbi
+fi
+
 cat << EOF > /home/azureuser/.ncbi/user-settings.mkfg
 /LIBS/GUID = "35a9977e-ac83-4b06-8751-ea61537984a7"
 /config/default = "false"
@@ -13,5 +17,14 @@ cat << EOF > /home/azureuser/.ncbi/user-settings.mkfg
 /repository/user/ad/public/root = "."
 /repository/user/default-path = "/home/azureuser/ncbi"
 EOF
+
 chown -R azureuser:azureuser /home/azureuser
-mkdir /data  && chown -R azureuser:azureuser /data
+
+if ! [ -d /data/input ]; then
+  mkdir -p /data/input
+fi
+if ! [ -d /data/runs ]; then
+  mkdir -p /data/runs
+fi
+
+chown -R azureuser:azureuser /data
