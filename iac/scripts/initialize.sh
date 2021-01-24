@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Check if user exists
 if ! id -u azureuser > /dev/null 2>&1; then
