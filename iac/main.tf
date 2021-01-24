@@ -104,6 +104,7 @@ resource "azurerm_virtual_machine" "vm" {
     caching                         = "ReadWrite"
     create_option                   = "FromImage"
   }
+  delete_os_disk_on_termination     = true
 
   storage_data_disk {
     name                            = "${local.prefix}-data"
