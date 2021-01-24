@@ -129,10 +129,16 @@ resource "azurerm_virtual_machine" "vm" {
   }
   
   network_interface_ids             = [azurerm_network_interface.main.id,]
-  
+ 
+  provisioner "file" {
+    source      = "scripts/initialize.sh"
+    destination = "/tmp/initialize.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "hostname"
+      "chmod +x /tmp/initialize.sh"
+      "/tmp/initialize.sh"
     ]
     connection {
       type        = "ssh"
