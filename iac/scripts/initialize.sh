@@ -1,6 +1,9 @@
 #!/bin/bash
 
-useradd azureuser
+# Check if user exists
+if ! id -u azureuser > /dev/null 2>&1; then
+  useradd azureuser
+fi
 
 if ! [ -d /home/azureuser/.ncbi ]; then
   mkdir -p /home/azureuser/.ncbi
