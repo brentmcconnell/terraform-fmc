@@ -1,6 +1,7 @@
 #!/bin/bash
 
 useradd azureuser
+mkdir /home/azureuser/.ncbi
 cat << EOF > /home/azureuser/.ncbi/user-settings.mkfg
 /LIBS/GUID = "35a9977e-ac83-4b06-8751-ea61537984a7"
 /config/default = "false"
