@@ -147,7 +147,7 @@ resource "azurerm_virtual_machine" "vm" {
     inline = [
       "set -x",
       "chmod +x /tmp/initialize.sh",
-      "/tmp/initialize.sh"
+      "sudo /tmp/initialize.sh"
     ]
     connection {
       type        = "ssh"
