@@ -94,6 +94,11 @@ resource "azurerm_virtual_machine" "vm" {
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
   vm_size                           = "Standard_D48as_v4"
 
+  identity {
+    type = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.managed_id.id]
+  }
+
   storage_image_reference {
     id = data.azurerm_image.fmc-img.id 
   }
@@ -159,6 +164,19 @@ resource "azurerm_virtual_machine" "vm" {
   }
 }
 
+#Managed Identity so that VM can access storage account easily
+resource "azurerm_user_assigned_identity" "managed_id" {
+  name                = "${local-prefix}-mi"
+  location            = local.location
+  resource_group_name = data.azurerm_resource_group.project-rg.name
+  tags                = local.tags
+}
+
+resource "azurerm_role_assignment" "blob_contributor" {
+  scope              = data.azurerm_resource_group.project-sa.id 
+  role_definition_id = "Storage Blob Data Contributor "
+  principal_id       = azurerm_user_assigned_identity.managed_id.principal_id
+}
 
 output "private_key" {
   value = tls_private_key.bootstrap_private_key.private_key_pem

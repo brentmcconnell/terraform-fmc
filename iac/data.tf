@@ -2,6 +2,10 @@ data "azurerm_resource_group" "project-rg" {
     name = "FMC-RG"
 }
 
+data "azurerm_resource_group" "project-sa" {
+    name = "FMC-SA"
+}
+
 data "azurerm_client_config" "current" {}
 
 data "azurerm_image" "fmc-img" {
