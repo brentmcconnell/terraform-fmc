@@ -1,23 +1,22 @@
 #!/bin/bash
 
 source activate denovo_asm
-cd /data/input
 
 # check to see if file already exists and delete
-if [ -f ./DRR213641 ]; then
+if [ -f /data/input/DRR213641 ]; then
   echo "Removing existing file"
-  rm ./DRR213641
+  rm /data/input/DRR213641
 fi
 
 # check to see if file already exists and delete
-if [ -f ./DRR213641.fastq ]; then
+if [ -f /data/input/DRR213641.fastq ]; then
   echo "Removing existing fastq file"
-  rm ./DRR213641.fastq
+  rm /data/input/DRR213641.fastq
 fi
 
-wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641
+wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641 -P /data/input
 
-fasterq-dump ./DRR213641
+fasterq-dump /data/input/DRR213641 -O /data/input
 
 timeout 120s canu -p RKN -d /data/assembly/RKN_canu \
   genomeSize=0.2g corMhapFilterThreshold=0.0000000002 \
