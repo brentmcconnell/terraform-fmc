@@ -166,7 +166,7 @@ resource "azurerm_virtual_machine" "vm" {
 
 #Managed Identity so that VM can access storage account easily
 resource "azurerm_user_assigned_identity" "managed_id" {
-  name                = "${local-prefix}-mi"
+  name                = "${local.prefix}-mi"
   location            = local.location
   resource_group_name = data.azurerm_resource_group.project-rg.name
   tags                = local.tags
