@@ -52,6 +52,8 @@ jobs:
       cd iac
       terraform output -json private_key | jq -r . > ssh_key; chmod 0600 ssh_key
       terraform output -json vm_ip | jq -r . > vm_ip_address
+      # Initialize the the remove environment
+      cat ../initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
       # Run the job script on the remote agent
       cat ../job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
     displayName: 'Run the sequencing job'
