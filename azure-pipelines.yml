@@ -65,5 +65,6 @@ jobs:
       cd iac
       echo '#######Terraform Destroy########'
       terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)"
+    condition: always()
     displayName: 'Terraform Destroy'
 
