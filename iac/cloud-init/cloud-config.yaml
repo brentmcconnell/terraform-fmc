@@ -6,23 +6,17 @@ disk_setup:
   /dev/disk/azure/scsi1/lun10:
     table_type: 'gpt'
     layout:
-      - 50
-      - 50
+      - 100
     overwrite: true
 
 fs_setup:
-  - label: runs
+  - label: data
     device: '/dev/disk/azure/scsi1/lun10'
     filesystem: 'ext4'
     partition: 1
-  - label: inputs
-    device: '/dev/disk/azure/scsi1/lun10'
-    filesystem: 'ext4'
-    partition: 2
 
 mounts:
-  - [ "/dev/disk/azure/scsi1/lun10-part1", "/data/runs", auto, "defaults,nofail" ]
-  - [ "/dev/disk/azure/scsi1/lun10-part2", "/data/input", auto, "defaults,nofail" ]
+  - [ "/dev/disk/azure/scsi1/lun10-part1", "/data", auto, "defaults,nofail" ]
 
 # runcmd:
 #  - [ mkdir, /data/input ]

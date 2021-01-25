@@ -23,11 +23,4 @@ EOF
 
 chown -R azureuser:azureuser /home/azureuser
 
-if ! [ -d /data/input ]; then
-  mkdir -p /data/input
-fi
-if ! [ -d /data/runs ]; then
-  mkdir -p /data/runs
-fi
-
 chown -R azureuser:azureuser /data
