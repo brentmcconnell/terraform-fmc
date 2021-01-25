@@ -19,7 +19,7 @@ wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641
 
 fasterq-dump ./DRR213641
 
-time canu -p RKN -d /data/assembly/RKN_canu \
+timeout 120s canu -p RKN -d /data/assembly/RKN_canu \
   genomeSize=0.2g corMhapFilterThreshold=0.0000000002 \
   mhapMemory=60g mhapBlockSize=500 \
   ovlMerDistinct=0.975 \
