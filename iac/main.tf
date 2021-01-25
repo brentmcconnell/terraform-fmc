@@ -103,6 +103,7 @@ resource "azurerm_virtual_machine" "vm" {
     managed_disk_type               = "Standard_LRS"
     caching                         = "ReadWrite"
     create_option                   = "FromImage"
+    disk_size_gb                    = 512
   }
   delete_os_disk_on_termination     = true
 
