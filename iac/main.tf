@@ -186,6 +186,18 @@ output "vm_ip" {
   value = data.azurerm_public_ip.pip.ip_address 
 }
 
+output "vm_rg" {
+  value = data.azurerm_resource_group.project-rg.name 
+}
+
+output "vm_name" {
+  value = azurerm_virtual_machine.vm.name
+}
+
+output "vm_datadisk" {
+  value = azurerm_virtual_machine.vm.storage_data_disk.0.name
+}
+
 # resource "azurerm_managed_disk" "data-disk" {
 #   name                  = "${local.prefix}-datadisk1"
 #   resource_group_name   = data.azurerm_resource_group.project-rg.name
