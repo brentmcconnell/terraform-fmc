@@ -62,10 +62,8 @@ jobs:
   - script: |
       set -x
       cat <<-EOF > upload-batch.sh
-        NOW=$(date +'%m%d%Y-%H%M%S')
-        echo "Now is $NOW"
         az login --identity
-        az storage blob upload-batch -d sequences -s /data/assembly/ --account-name fmcsequencing --destination-path $NOW --auth-mode login
+        az storage blob upload-batch -d sequences -s /data/assembly/ --account-name fmcsequencing --destination-path $(date +'%m%d%Y-%H%M%S') --auth-mode login
       EOF
       cat upload-batch.sh
       ls -la
