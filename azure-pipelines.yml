@@ -63,14 +63,15 @@ jobs:
       az vm start -n $(cat ./vm_name) -g $(cat ./vm_rg)
       az vm user reset-ssh -n $(cat ./vm_name) -g $(cat ./vm_rg)
     condition: always()
-    displayName: 'Ensure machine is started before execution begins'
+    displayName: 'Start VM if not running' 
 
   - script: |
       set -x
-      # Initialize the the remove environment
-      #      cat ../initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
-      # Run the job script on the remote agent
-      #      cat ../job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      exit 1
+      #Initialize the the remove environment
+      cat ../initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      #Run the job script on the remote agent
+      cat ../job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
     displayName: 'Run sequencing job'
 
 
@@ -87,13 +88,13 @@ jobs:
       set -x
       az vm deallocate -n $(cat ./vm_name) -g $(cat ./vm_rg)
     condition: always()
-    displayName: 'Deallocate the VM so no charges are incurred.  This is always done whether or not the job succeeds'
+    displayName: 'Deallocate the VM'
   
-  # - script: |
-  #     # Tear down the environment
-  #     set -x
-  #     cd iac
-  #     echo '#######Terraform Destroy########'
-  #     terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)"
-  #   displayName: 'Terraform Destroy'
+  - script: |
+      # Tear down the environment
+      set -x
+      cd iac
+      echo '#######Terraform Destroy########'
+      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)"
+    displayName: 'Terraform Destroy'
 
