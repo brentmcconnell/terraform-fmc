@@ -61,6 +61,7 @@ jobs:
   - script: |
       set -x
       az vm start -n $(cat ./vm_name) -g $(cat ./vm_rg)
+      az vm user reset-ssh -n $(cat ./vm_name) -g $(cat ./vm_rg)
     condition: always()
     displayName: 'Ensure machine is started before execution begins'
 
