@@ -3,7 +3,7 @@ data "azurerm_resource_group" "project-rg" {
 }
 
 data "azurerm_resource_group" "project-sa" {
-    name = var.storage_account_rg
+    name = "${var.storage_account_rg}"
 }
 
 data "azurerm_client_config" "current" {}
