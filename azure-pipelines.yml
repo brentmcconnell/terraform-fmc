@@ -125,7 +125,7 @@ jobs:
       echo "Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > upload-batch.sh
         az login --identity
-        az storage blob upload-batch -d sequences -s /data/assembly/ --account-name ${{paramters.STORAGE_ACCOUNT}} --destination-path $(date +'%m%d%Y-%H%M%S') --auth-mode login
+        az storage blob upload-batch -d sequences -s /data/assembly/ --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path $(date +'%m%d%Y-%H%M%S') --auth-mode login
       EOF
       cat ./upload-batch.sh
       ls -la
