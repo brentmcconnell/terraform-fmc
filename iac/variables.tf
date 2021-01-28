@@ -1,6 +1,6 @@
-variable "storage_account" {
+variable "storage_account_rg" {
   type                      = string
-  description               = "Storage Account for data"
+  description               = "Resource Group for Storage Account used for data"
 }
 
 variable "vmsize" {

@@ -11,10 +11,10 @@ parameters:
   - D16as_v4
   - D8as_v4
 
-- name: storage_account
-  displayName: 'Storage Account'
+- name: storage_account_rg
+  displayName: 'Storage Account Resource Group'
   type: string
-  default: storageacct
+  default: FMC_SA
 
 - name: input_container
   displayName: 'Input Container'
@@ -82,7 +82,7 @@ jobs:
       echo '#######Terraform Init########'
       terraform init -backend-config="storage_account_name=$(TF_STORAGE_ACCT_NAME)" -backend-config="container_name=$(TF_STORAGE_CONT_NAME)" -backend-config="access_key=$(ak-backend-sa-0693)" -backend-config="key=$(TF_STATE_FILE)" 
       echo '#######Terraform Plan########'
-      terraform plan -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" -var="storage_account=$${{ parameters.storage_account }}" -out="out.plan" 
+      terraform plan -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" -var="storage_account_rg=$${{ parameters.storage_account_rg }}" -out="out.plan" 
       echo '#######Terraform Apply########'
       terraform apply out.plan
     displayName: 'Terraform Init, Plan and Apply '
@@ -139,6 +139,6 @@ jobs:
       set -x
       cd iac
       echo '#######Terraform Destroy########'
-      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" -var="storage_account=$${{ parameters.storage_account }}" 
+      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" -var="storage_account_rg=$${{ parameters.storage_account_rg }}" 
     displayName: 'Terraform Destroy'
 
