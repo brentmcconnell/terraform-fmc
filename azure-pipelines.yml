@@ -16,6 +16,11 @@ parameters:
   type: string
   default: FMC_SA
 
+- name: storage_account
+  displayName: 'Storage Account'
+  type: string
+  default: fmcsequencing
+
 - name: input_container
   displayName: 'Input Container'
   type: string
