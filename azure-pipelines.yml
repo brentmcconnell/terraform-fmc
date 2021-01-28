@@ -11,15 +11,20 @@ parameters:
   - D16as_v4
   - D8as_v4
 
-- name: input_storage_account
-  displayName: 'Input Storage Account'
+- name: storage_account
+  displayName: 'Storage Account'
   type: string
-  default: fmcinput
+  default: storageacct
 
-- name: output_storage_account
-  displayName: 'Output Storage Account'
+- name: input_container
+  displayName: 'Input Container'
   type: string
-  default: fmcoutput
+  default: input
+
+- name: output_container
+  displayName: 'Output Container'
+  type: string
+  default: output
 
 - name: destroy
   displayName: 'Destroy Infra After Successful Run?'
