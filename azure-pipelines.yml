@@ -24,15 +24,20 @@ parameters:
 - name: INPUT_CONTAINER
   displayName: 'Input Container'
   type: string
-  default: "input"
+  default: "sequences"
 
-- name: INPUT_DIRECTORY
+- name: INPUT_PATH
   displayName: 'Input Path in Container'
   type: string
   default: "/*"
 
 - name: OUTPUT_CONTAINER
   displayName: 'Output Container'
+  type: string
+  default: "sequences"
+
+- name: OUTPUT_PATH
+  displayName: 'Output Path in Container'
   type: string
   default: "output"
 
