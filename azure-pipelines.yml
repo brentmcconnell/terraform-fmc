@@ -1,5 +1,5 @@
 parameters:
-- name: vmsize
+- name: VMSIZE
   displayName: 'VM Size'
   type: string
   default: D48as_v4
@@ -11,27 +11,27 @@ parameters:
   - D16as_v4
   - D8as_v4
 
-- name: storage_account_rg
+- name: STORAGE_ACCOUNT_RG 
   displayName: 'Storage Account Resource Group'
   type: string
   default: "FMC-SA"
 
-- name: storage_account
+- name: STORAGE_ACCOUNT
   displayName: 'Storage Account'
   type: string
   default: "fmcsequencing"
 
-- name: input_container
+- name: INPUT_CONTAINER
   displayName: 'Input Container'
   type: string
   default: "input"
 
-- name: output_container
+- name: OUTPUT_CONTAINER
   displayName: 'Output Container'
   type: string
   default: "output"
 
-- name: destroy
+- name: DESTROY
   displayName: 'Destroy Infra After Successful Run?'
   type: boolean
   default: true
