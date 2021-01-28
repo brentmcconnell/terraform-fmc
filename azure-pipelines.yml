@@ -14,22 +14,22 @@ parameters:
 - name: storage_account_rg
   displayName: 'Storage Account Resource Group'
   type: string
-  default: FMC-SA
+  default: "FMC-SA"
 
 - name: storage_account
   displayName: 'Storage Account'
   type: string
-  default: fmcsequencing
+  default: "fmcsequencing"
 
 - name: input_container
   displayName: 'Input Container'
   type: string
-  default: input
+  default: "input"
 
 - name: output_container
   displayName: 'Output Container'
   type: string
-  default: output
+  default: "output"
 
 - name: destroy
   displayName: 'Destroy Infra After Successful Run?'
