@@ -113,9 +113,9 @@ jobs:
   - script: |
       set -x
       #Initialize the the remove environment
-      cat ./initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      # cat ./initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
       #Run the job script on the remote agent
-      cat ./job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      # cat ./job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
     displayName: 'Run sequencing job'
 
 
@@ -123,7 +123,7 @@ jobs:
       set -x
       cat <<-EOF > upload-batch.sh
         az login --identity
-        az storage blob upload-batch -d sequences -s /data/assembly/ --account-name fmcsequencing --destination-path $(date +'%m%d%Y-%H%M%S') --auth-mode login
+        az storage blob upload-batch -d sequences -s /data/assembly/ --account-name $STORAGE_ACCOUNT --destination-path $(date +'%m%d%Y-%H%M%S') --auth-mode login
       EOF
       cat upload-batch.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) 
     displayName: 'Upload results to storage account'
@@ -144,6 +144,7 @@ jobs:
       set -x
       cd iac
       echo '#######Terraform Destroy########'
-      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" -var="storage_account_rg=$${{ parameters.storage_account_rg }}" 
+      terraform destroy -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" -var="storage_account_rg=${{ parameters.storage_account_rg }}"
+    condition: ${{ parameters.destroy }}
     displayName: 'Terraform Destroy'
 
