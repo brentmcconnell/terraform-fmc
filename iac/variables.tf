@@ -1,3 +1,8 @@
+variable "vmsize" {
+  type                      = string
+  description               = "Size of VM to create"
+}
+
 variable "prefix" {
   type                      = string
   default                   = "tf"

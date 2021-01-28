@@ -4,6 +4,7 @@ locals {
   prefix                = "${var.prefix}-0693"
   location              = var.location
   vault_name            = "${local.prefix}-vault"
+  vmsize                = "Standard_${var.vmsize}"
   
   # Common tags should go here
   tags           = {
@@ -92,7 +93,7 @@ resource "azurerm_virtual_machine" "vm" {
   name                              = "${local.prefix}-vm"
   location                          = local.location 
   resource_group_name               = data.azurerm_resource_group.project-rg.name 
-  vm_size                           = "Standard_D48as_v4"
+  vm_size                           = local.vmsize
 
   identity {
     type = "UserAssigned"
