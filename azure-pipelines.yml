@@ -30,6 +30,9 @@ variables:
 - name: DECODE_PERCENTS
   value: false
 
+trigger: none
+pr: none
+
 jobs:
 - job: sequencing
   timeoutInMinutes: 0
@@ -41,8 +44,8 @@ jobs:
     #pool: ubuntu-18.04-vmss
   pool:
     vmImage: 'ubuntu-latest'
-  steps:
 
+  steps:
   #KEY VAULT TASK
   - task: AzureKeyVault@1
     inputs:
