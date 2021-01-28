@@ -2,7 +2,7 @@ parameters:
 - name: vmsize
   displayName: 'VM Size'
   type: string
-  default: D96as_v4
+  default: D48as_v4
   values:
   - D96as_v4
   - D64as_v4
@@ -10,6 +10,26 @@ parameters:
   - D32as_v4
   - D16as_v4
   - D8as_v4
+
+- name: input_storage_account
+  displayName: 'Input Storage Account'
+  type: string
+  default: fmcinput
+
+- name: output_storage_account
+  displayName: 'Output Storage Account'
+  type: string
+  default: fmcoutput
+
+- name: destroy
+  displayName: 'Destroy Infra After Successful Run?'
+  type: boolean
+  default: true
+
+variables:
+- name: DECODE_PERCENTS
+  value: false
+
 jobs:
 - job: sequencing
   timeoutInMinutes: 0
@@ -111,6 +131,6 @@ jobs:
       set -x
       cd iac
       echo '#######Terraform Destroy########'
-      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)"
+      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" 
     displayName: 'Terraform Destroy'
 
