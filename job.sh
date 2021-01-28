@@ -1,13 +1,20 @@
-#!/bin/bash
+#!/bin/bash -x
 
 source activate denovo_asm
 
-curl -L -o /data/input/pacbio.fastq http://gembox.cbcb.umd.edu/mhap/raw/ecoli_p6_25x.filtered.fastq
+# cd to input directory
+cd /data/input
+
+# report what is in the input area for debuggin
+ls -la
+
+FASTQ_FILES=$(find . -name '*.fastq' -maxdepth 1 -not -type d | tr '\n' ' ')
+echo $FASTQ_FILES
 
 time canu \
- -p ecoli -d /data/assembly/ecoli-pacbio \
+ -p ecoli -d /data/assembly/RUN \
  genomeSize=4.8m \
- -pacbio /data/input/pacbio.fastq | tee /data/input/ecoli.log
+ -pacbio $FASTQ_FILES | tee /data/input/run.log
 
 # # check to see if file already exists and delete
 # if [ -f /data/input/DRR213641 ]; then

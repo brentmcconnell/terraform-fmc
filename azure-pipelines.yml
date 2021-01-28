@@ -26,6 +26,11 @@ parameters:
   type: string
   default: "input"
 
+- name: INPUT_DIRECTORY
+  displayName: 'Input Path in Container'
+  type: string
+  default: "/*"
+
 - name: OUTPUT_CONTAINER
   displayName: 'Output Container'
   type: string
@@ -120,14 +125,11 @@ jobs:
 
   - script: |
       set -x
-      echo "Storage Account $STORAGE_ACCOUNT"
-      echo "Storage Account ${{parameters.STORAGE_ACCOUNT}}"
+      echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > upload-batch.sh
         az login --identity
         az storage blob upload-batch -d sequences -s /data/assembly/ --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path $(date +'%m%d%Y-%H%M%S') --auth-mode login
       EOF
-      cat ./upload-batch.sh
-      ls -la
       cat upload-batch.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) 
     displayName: 'Upload results to storage account'
   
