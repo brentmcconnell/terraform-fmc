@@ -14,7 +14,7 @@ parameters:
 - name: storage_account_rg
   displayName: 'Storage Account Resource Group'
   type: string
-  default: FMC_SA
+  default: FMC-SA
 
 - name: storage_account
   displayName: 'Storage Account'
