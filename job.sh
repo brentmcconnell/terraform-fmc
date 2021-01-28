@@ -8,6 +8,7 @@ cd /data/input
 # report what is in the input area for debuggin
 ls -la
 
+# Only fastq files are processed
 FASTQ_FILES=$(find . -name '*.fastq' -maxdepth 1 -not -type d | tr '\n' ' ')
 echo $FASTQ_FILES
 

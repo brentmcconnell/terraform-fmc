@@ -37,7 +37,12 @@ parameters:
   default: "output"
 
 - name: DESTROY
-  displayName: 'Destroy Infra After Successful Run?'
+  displayName: 'Destroy infra after successful run?'
+  type: boolean
+  default: true
+
+- name: SNAPSHOT
+  displayName: 'Snapshot data disk after successful run?'
   type: boolean
   default: true
 
@@ -137,6 +142,7 @@ jobs:
       set -x
       az snapshot create -n $(date +'%m%d%Y-%H%M%S')-snap -g $(cat ./vm_rg) --source $(cat ./vm_datadisk)
     displayName: 'Snapshot data disk'
+    condition: ${{ parameters.snapshot }}
 
   - script: |
       set -x
