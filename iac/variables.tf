@@ -1,3 +1,8 @@
+variable "storage_account" {
+  type                      = string
+  description               = "Storage Account for data"
+}
+
 variable "vmsize" {
   type                      = string
   description               = "Size of VM to create"

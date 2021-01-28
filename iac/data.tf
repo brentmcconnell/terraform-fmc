@@ -3,7 +3,7 @@ data "azurerm_resource_group" "project-rg" {
 }
 
 data "azurerm_resource_group" "project-sa" {
-    name = "FMC-SA"
+    name = var.storage_account
 }
 
 data "azurerm_client_config" "current" {}
