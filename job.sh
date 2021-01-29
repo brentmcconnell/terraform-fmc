@@ -9,7 +9,7 @@ cd /data/input
 ls -la
 
 # Only fastq files are processed
-FASTQ_FILES=$(find . -name '*.fastq' -maxdepth 1 -not -type d | tr '\n' ' ')
+FASTQ_FILES=$(find . -name '*.fastq' -not -type d | tr '\n' ' ')
 echo $FASTQ_FILES
 
 time canu \
