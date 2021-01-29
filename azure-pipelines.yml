@@ -24,22 +24,22 @@ parameters:
 - name: INPUT_CONTAINER
   displayName: 'Input Container'
   type: string
-  default: "sequences"
+  default: "input"
 
 - name: INPUT_PATH
   displayName: 'Input Path in Container'
   type: string
-  default: "/*"
+  default: "*.fastq"
 
 - name: OUTPUT_CONTAINER
   displayName: 'Output Container'
   type: string
-  default: "sequences"
+  default: "output"
 
 - name: OUTPUT_PATH
   displayName: 'Output Path in Container'
   type: string
-  default: "output"
+  default: "./"
 
 - name: DESTROY
   displayName: 'Destroy infra after successful run?'
@@ -135,7 +135,7 @@ jobs:
       echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > download-batch.sh
         az login --identity
-        az storage blob download-batch --source sequences --pattern *.fastq --account-name ${{parameters.STORAGE_ACCOUNT}} --destination /data/input --auth-mode login
+        az storage blob download-batch --source ${{parameters.INPUT_CONTAINER}} --pattern ${{parameters.INPUT_PATH}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination /data/input --auth-mode login
       EOF
       cat download-batch.sh
       ls -la
