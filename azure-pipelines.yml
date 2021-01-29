@@ -39,7 +39,7 @@ parameters:
 - name: OUTPUT_PATH
   displayName: 'Output Path in Container'
   type: string
-  default: "./"
+  default: "."
 
 - name: DESTROY
   displayName: 'Destroy infra after successful run?'
@@ -155,7 +155,7 @@ jobs:
       echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > upload-batch.sh
         az login --identity
-        az storage blob upload-batch -d sequences -s /data/assembly/ --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path $(date +'%m%d%Y-%H%M%S') --auth-mode login
+        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/ --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(date +'%m%d%Y-%H%M%S') --auth-mode login
       EOF
       cat upload-batch.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) 
     displayName: 'Upload results to storage account'
