@@ -76,6 +76,15 @@ jobs:
   #   vmImage: 'ubuntu-latest'
 
   steps:
+  #Setup Custom Variables for pipeline
+  - script: |
+      GIT_COMMIT=$( git rev-parse --short HEAD )
+      NOW=$(date +'%m%d%Y-%H%M%S')
+      echo "##vso[task.setvariable variable=commitHash;isOutput=true]$GIT_COMMIT"
+      echo "##vso[task.setvariable variable=now;isOutput=true]$NOW"
+    name: runtime_vars
+    displayName: 'Set runtime variables for pipeline'
+
   #KEY VAULT TASK
   - task: AzureKeyVault@1
     inputs:
@@ -174,9 +183,9 @@ jobs:
   
   - script: |
       set -x
-      #Run the cleaup job
-      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s $DATE <./cleanup-env.sh"
-    displayName: 'Run sequencing job'
+      #Run the cleaup job passing our local variable to remote machine
+      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./cleanup-env.sh $(runtime_vars.now)
+    displayName: 'Run environment cleanup job'
 
   - script: |
       set -x
