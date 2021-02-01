@@ -96,7 +96,7 @@ jobs:
       azureSubscription: 'TFSTATE-RG-READ-SP-terraform-fmc'
       KeyVaultName: 'mykeyzvault'
       SecretsFilter: 'sp-client-id-tf-0693,sp-cert-tf-0693,sp-tenant-id-tf-0693,sp-subscription-id-tf-0693,ak-backend-sa-0693'
-    displayName: 'Get key vault secrets as pipeline variables'
+    displayName: 'Get key vault secrets'
 
   # TERRAFORM VERSION
   - script: |
@@ -107,14 +107,12 @@ jobs:
       echo "$(sp-cert-tf-0693)" > service-principal.pfx.b64
       base64 --decode service-principal.pfx.b64 > service-principal.pfx
       openssl pkcs12 -in service-principal.pfx -out service-principal.pem -nodes -passin pass:
-      cat service-principal.pem
-      ls -la
-    displayName: 'What is in the cert variable?'
+    displayName: 'Set cert variable for Terraform'
 
   # AZ LOGIN USING TERRAFORM SERVICE PRINCIPAL
   - script: |
       az login --service-principal -u "$(sp-client-id-tf-0693)" -p "service-principal.pem" --tenant "$(sp-tenant-id-tf-0693)"
-    displayName: 'Login the az cli'
+    displayName: 'Login az cli'
 
   - script: |
       cd iac
@@ -162,7 +160,7 @@ jobs:
       cat download-batch.sh
       ls -la
       cat download-batch.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) 
-    displayName: 'Download fastq files from storage account for processing'
+    displayName: 'Download fastq files from storage account'
 
   - script: |
       set -x
@@ -170,7 +168,7 @@ jobs:
       #Run the job script on the remote agent
       #cat ./job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
       ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./job.sh ${{parameters.JOB_PREFIX}}
-    displayName: 'Run sequencing job'
+    displayName: 'Run workload processing job'
 
   - script: |
       set -x
@@ -182,7 +180,7 @@ jobs:
       cat upload-batch.sh
       ls -la
       cat upload-batch.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) 
-    displayName: 'Upload results to storage account'
+    displayName: 'Upload processing results to storage account'
   
   - script: |
       set -x
@@ -194,8 +192,8 @@ jobs:
       set -x
       ls -la
       #Run the cleaup job passing our local variable to remote machine
-      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./cleanup-env.sh ${{parameters.JOB_PREFIX}}
-    displayName: 'Run environment cleanup job'
+      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./post-processing.sh ${{parameters.JOB_PREFIX}}
+    displayName: 'Run post processing job'
 
   - script: |
       set -x
