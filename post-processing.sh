@@ -2,6 +2,6 @@
 hostname
 source /etc/profile
 
-echo $PATH
 echo "JOB_PREFIX \$1 = $1"
 
+# Post processing steps go here 
