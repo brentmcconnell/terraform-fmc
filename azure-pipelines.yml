@@ -184,7 +184,7 @@ jobs:
         #upload run results
         az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
         #upload job log
-        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/runs/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
+        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/runs/${{parameters.JOB_PREFIX}}/*$(runtime_vars.now).log --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
       EOF
       cat upload-batch.sh
       ls -la
