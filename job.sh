@@ -2,8 +2,15 @@
 
 source activate denovo_asm
 
-# cd to input directory
-cd /data/input
+# if parameter passed in this will be where we execute the job
+
+if [ -z $1 ]; then
+  # cd to input directory
+  cd /data/input
+else
+  mkdir -p /data/input/$1
+  cd /data/input/$1
+fi
 
 # report what is in the input area for debuggin
 ls -la
@@ -13,21 +20,10 @@ FASTQ_FILES=$(find . -name '*.fastq' -not -type d | tr '\n' ' ')
 echo $FASTQ_FILES
 
 time canu \
- -p ecoli -d /data/assembly/RUN \
+ -p ecoli -d /data/assembly/$1/RUN \
  genomeSize=4.8m \
- -pacbio $FASTQ_FILES | tee /data/input/run.log
+ -pacbio $FASTQ_FILES | tee /data/input/$1/run.log
 
-# # check to see if file already exists and delete
-# if [ -f /data/input/DRR213641 ]; then
-#   echo "Removing existing file"
-#   rm /data/input/DRR213641
-# fi
-
-# # check to see if file already exists and delete
-# if [ -f /data/input/DRR213641.fastq ]; then
-#   echo "Removing existing fastq file"
-#   rm /data/input/DRR213641.fastq
-# fi
 
 # wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641 -P /data/input
 

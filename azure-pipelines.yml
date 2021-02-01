@@ -1,4 +1,9 @@
 parameters:
+- name: JOB_PREFIX
+  displayName: 'Job prefix used to distinquish workloads'
+  type: string
+  default: "fmc"
+
 - name: VMSIZE
   displayName: 'VM Size'
   type: string
@@ -142,7 +147,8 @@ jobs:
   - script: |
       set -x
       #Initialize the the remove environment
-      cat ./initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      #cat ./initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./initialize-env.sh ${{parameters.JOB_PREFIX}}
     displayName: 'Setup job run environment'
 
   - script: |
@@ -150,7 +156,7 @@ jobs:
       echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > download-batch.sh
         az login --identity
-        az storage blob download-batch --source ${{parameters.INPUT_CONTAINER}} --pattern ${{parameters.INPUT_PATH}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination /data/input --auth-mode login
+        az storage blob download-batch --source ${{parameters.INPUT_CONTAINER}} --pattern ${{parameters.INPUT_PATH}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination /data/input/${{parameters.JOB_PREFIX}} --auth-mode login
       EOF
       cat download-batch.sh
       ls -la
@@ -160,7 +166,8 @@ jobs:
   - script: |
       set -x
       #Run the job script on the remote agent
-      cat ./job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      #cat ./job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
+      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./job.sh ${{paremeters.JOB_PREFIX}}
     displayName: 'Run sequencing job'
 
   - script: |
@@ -168,7 +175,7 @@ jobs:
       echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > upload-batch.sh
         az login --identity
-        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/ --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(date +'%m%d%Y-%H%M%S') --auth-mode login
+        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(date +'%m%d%Y-%H%M%S') --auth-mode login
       EOF
       cat upload-batch.sh
       ls -la
@@ -184,7 +191,7 @@ jobs:
   - script: |
       set -x
       #Run the cleaup job passing our local variable to remote machine
-      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./cleanup-env.sh $(runtime_vars.now)
+      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./cleanup-env.sh ${{parameters.JOB_PREFIX}}
     displayName: 'Run environment cleanup job'
 
   - script: |
