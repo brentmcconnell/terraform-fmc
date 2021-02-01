@@ -1,5 +1,7 @@
 #!/bin/bash
+source /etc/profile
 hostname
+
 conda init bash
 conda create --yes -n denovo_asm
 
