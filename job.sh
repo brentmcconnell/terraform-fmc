@@ -9,10 +9,10 @@ source activate denovo_asm
 
 if [ -z $1 ]; then
   # cd to input directory
-  cd /data/input
+  cd /data/runs
 else
   mkdir -p /data/input/$1
-  cd /data/input/$1
+  cd /data/runs/$1
 fi
 
 # report what is in the input area for debuggin
@@ -21,11 +21,13 @@ ls -la
 # Only fastq files are processed
 FASTQ_FILES=$(find . -name '*.fastq' -not -type d | tr '\n' ' ')
 echo $FASTQ_FILES
+      
+NOW=$(date +'%m%d%Y-%H%M%S')
 
 time canu \
  -p ecoli -d /data/assembly/$1/RUN \
  genomeSize=4.8m \
- -pacbio $FASTQ_FILES | tee /data/input/$1/run.log
+ -pacbio $FASTQ_FILES | tee /data/runs/$1/run-$NOW.log
 
 
 # wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641 -P /data/input

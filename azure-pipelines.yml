@@ -181,7 +181,10 @@ jobs:
       echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > upload-batch.sh
         az login --identity
-        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(date +'%m%d%Y-%H%M%S') --auth-mode login
+        #upload run results
+        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
+        #upload job log
+        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/runs/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
       EOF
       cat upload-batch.sh
       ls -la
