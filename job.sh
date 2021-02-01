@@ -27,7 +27,7 @@ NOW=$(date +'%m%d%Y-%H%M%S')
 time canu \
  -p ecoli -d /data/assembly/$1/RUN \
  genomeSize=4.8m \
- -pacbio $FASTQ_FILES | tee /data/runs/$1/run-$NOW.log
+ -pacbio $FASTQ_FILES 2>&1 | tee /data/runs/$1/run-$NOW.log
 
 
 # wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641 -P /data/input
