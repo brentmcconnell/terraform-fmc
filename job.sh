@@ -1,5 +1,6 @@
 #!/bin/bash -x
 
+hostname
 source activate denovo_asm
 
 # if parameter passed in this will be where we execute the job
