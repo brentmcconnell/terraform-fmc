@@ -147,7 +147,11 @@ jobs:
       ls -la
       #Initialize the the remove environment
       #cat ./initialize-env.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
-      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./initialize-env.sh ${{parameters.JOB_PREFIX}}
+      if [ -f ./initialize-env.sh ]; then
+        ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./initialize-env.sh ${{parameters.JOB_PREFIX}}
+      else
+        echo "no initialize job supplied"
+      fi
     displayName: 'Setup job run environment'
 
   - script: |
@@ -173,7 +177,11 @@ jobs:
   - script: |
       set -x
       #Run the cleaup job passing our local variable to remote machine
-      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./post-processing.sh ${{parameters.JOB_PREFIX}}
+      if [ -f ./post-processing.sh ]; then
+        ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./post-processing.sh ${{parameters.JOB_PREFIX}}
+      else
+        echo "no post-processing job supplied"
+      fi
     displayName: 'Run post processing job'
   
   - script: |
@@ -184,7 +192,7 @@ jobs:
         #upload run results
         az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
         #upload job log
-        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/runs/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --pattern *$(runtime_vars.now).log --auth-mode login
+        az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/runs/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
       EOF
       cat upload-batch.sh
       ls -la
@@ -196,6 +204,16 @@ jobs:
       az snapshot create -n $(date +'%m%d%Y-%H%M%S')-snap -g $(cat ./vm_rg) --source $(cat ./vm_datadisk)
     displayName: 'Snapshot data disk'
     condition: ${{ parameters.snapshot }}
+  
+  - script: |
+      set -x
+      #Run the cleaup job passing our local variable to remote machine
+      if [ -f ./cleanup-env.sh ]; then
+        ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./cleanup-env.sh ${{parameters.JOB_PREFIX}}
+      else
+        echo "no cleanup job provided."
+      fi
+    displayName: 'Run cleanup job'
 
   - script: |
       set -x
