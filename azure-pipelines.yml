@@ -1,4 +1,4 @@
-a:qrameters:
+parameters:
 - name: JOB_PREFIX
   displayName: 'Job prefix used to distinquish workloads'
   type: string
