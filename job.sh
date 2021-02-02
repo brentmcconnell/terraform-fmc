@@ -9,10 +9,10 @@ source activate denovo_asm
 
 if [ -z $1 ]; then
   # cd to input directory
-  cd /data/runs
+  cd /data/input
 else
   mkdir -p /data/input/$1
-  cd /data/runs/$1
+  cd /data/input/$1
 fi
 
 # report what is in the input area for debuggin
