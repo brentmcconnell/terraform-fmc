@@ -25,7 +25,7 @@ echo $FASTQ_FILES
 NOW=$(date +'%m%d%Y-%H%M%S')
 
 time canu \
- -p ecoli -d /data/assembly/$1/RUN \
+ -p ecoli -d /data/runs/$1/RUN \
  genomeSize=4.8m \
  -pacbio $FASTQ_FILES 2>&1 | tee /data/runs/$1/run-$NOW.log
 
@@ -34,9 +34,9 @@ time canu \
 
 # fasterq-dump /data/input/DRR213641 -O /data/input
 
-# time canu -p RKN -d /data/assembly/RKN_canu \
+# time canu -p RKN -d /data/runs/$1/RKN_canu \
 #   genomeSize=0.2g corMhapFilterThreshold=0.0000000002 \
 #   mhapMemory=60g mhapBlockSize=500 \
 #   ovlMerDistinct=0.975 \
 #   corMhapOptions="--threshold 0.80 --num-hashes 512 --num-min-matches 3 --ordered-sketch-size 1000 --ordered-kmer-size 14 --min-olap-length 2000 --repeat-idf-scale 50" \
-#   -pacbio-raw $FASTQ_FILES | tee /data/input/run.log
+#   -pacbio-raw $FASTQ_FILES | tee /data/runs/$1/run.log
