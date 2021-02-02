@@ -51,15 +51,15 @@ parameters:
   type: boolean
   default: true
 
-- name: SNAPSHOT
-  displayName: 'Snapshot data disk after successful run?'
-  type: boolean
-  default: true
-
 - name: STOPVM
   displayName: 'Stop VM after job?'
   type: boolean
   default: true
+
+- name: SNAPSHOT
+  displayName: 'Snapshot data disk after successful run?'
+  type: boolean
+  default: false
 
 variables:
 - name: DECODE_PERCENTS
