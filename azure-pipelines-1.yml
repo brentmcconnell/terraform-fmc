@@ -1,3 +1,6 @@
+trigger: none
+pr: none
+
 jobs:
 - job: destroy
   timeoutInMinutes: 0
