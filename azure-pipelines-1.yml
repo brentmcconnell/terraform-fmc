@@ -1,0 +1,47 @@
+trigger: none
+pr: none
+
+jobs:
+- job: destroy
+  timeoutInMinutes: 0
+  variables:
+    TF_STORAGE_ACCT_NAME: tfstateacct0693
+    TF_STORAGE_CONT_NAME: tfcont-0693 
+    TF_STATE_FILE: terraform.tfstate 
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  steps:
+  #KEY VAULT TASK
+  - task: AzureKeyVault@1
+    inputs:
+      azureSubscription: 'TFSTATE-RG-READ-SP-terraform-fmc'
+      KeyVaultName: 'mykeyzvault'
+      SecretsFilter: 'sp-client-id-tf-0693,sp-cert-tf-0693,sp-tenant-id-tf-0693,sp-subscription-id-tf-0693,ak-backend-sa-0693'
+    displayName: 'Get key vault secrets'
+
+  # TERRAFORM VERSION
+  - script: |
+      terraform version
+    displayName: 'Get Terraform Version'
+
+  - script: |
+      echo "$(sp-cert-tf-0693)" > service-principal.pfx.b64
+      base64 --decode service-principal.pfx.b64 > service-principal.pfx
+      openssl pkcs12 -in service-principal.pfx -out service-principal.pem -nodes -passin pass:
+    displayName: 'Set cert variable for Terraform'
+
+  - script: |
+      cd iac
+      echo '#######Terraform Init########'
+      terraform init -backend-config="storage_account_name=$(TF_STORAGE_ACCT_NAME)" -backend-config="container_name=$(TF_STORAGE_CONT_NAME)" -backend-config="access_key=$(ak-backend-sa-0693)" -backend-config="key=$(TF_STATE_FILE)" 
+    displayName: 'Terraform Init'
+
+  - script: |
+      # Tear down the environment
+      set -x
+      cd iac
+      echo '#######Terraform Destroy########'
+      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=default" -var="storage_account_rg=default"
+    displayName: 'Terraform Destroy'
+
