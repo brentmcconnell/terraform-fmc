@@ -214,7 +214,7 @@ jobs:
       set -x
       cd iac
       echo '#######Terraform Destroy########'
-      terraform destroy --auto-approve -var="clientId=$(sp-client-id-tf-0693)" -var="tenantId=$(sp-tenant-id-tf-0693)" -var="subscriptionId=$(sp-subscription-id-tf-0693)" -var="vmsize=${{ parameters.vmsize }}" -var="storage_account_rg=${{ parameters.storage_account_rg }}"
+      terraform destroy --auto-approve 
     condition: ${{ parameters.destroy }}
     displayName: 'Terraform Destroy'
 
