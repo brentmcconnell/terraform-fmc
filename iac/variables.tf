@@ -22,3 +22,13 @@ variable "project-rg" {
   type                      = string
   description               = "Resource Group project resources will be created in"
 }
+
+variable "agent-vnet-name" {
+  type                      = string
+  description               = "VNet of agent network to peer to"
+}
+
+variable "agent-vnet-rg" {
+  type                      = string
+  description               = "Resource Group that contains Agent VNet to Peer to"
+}

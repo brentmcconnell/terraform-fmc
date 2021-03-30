@@ -157,5 +157,17 @@ resource "azurerm_role_assignment" "blob_contributor" {
   principal_id          = azurerm_user_assigned_identity.managed_id.principal_id
 }
 
+resource "azurerm_virtual_network_peering" "agent-worker" {
+  name                      = "agent-worker"
+  resource_group_name       = data.azurerm_virtual_network.agent-vnet.resource_group_name
+  virtual_network_name      = data.azurerm_virtual_network.agent-vnet.name
+  remote_virtual_network_id = azurerm_virtual_network.main.id
+}
 
+resource "azurerm_virtual_network_peering" "worker-agent" {
+  name                      = "worker-agent"
+  resource_group_name       = data.azurerm_resource_group.project-rg.name
+  virtual_network_name      = azurerm_virtual_network.main.name
+  remote_virtual_network_id = data.azurerm_virtual_network.agent-vnet.id
+}
 
