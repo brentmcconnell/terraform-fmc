@@ -66,9 +66,9 @@ pr: none
 jobs:
 - job: sequencing
   timeoutInMinutes: 0
-  #pool: ubuntu-18.04-vmss
-  pool:
-    vmImage: 'ubuntu-latest'
+  pool: ado-agents 
+  # pool:
+  #   vmImage: 'ubuntu-latest'
 
   steps:
   #Setup Custom Variables for pipeline
