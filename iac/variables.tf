@@ -10,6 +10,15 @@ variable "prefix" {
 
 variable "location" {
   type                      = string
-  default                   = "eastus"
   description               = "The Azure Region used"
+}
+
+variable "datadisk_size_gb" {
+  type                      = integer
+  description               = "Size of data disk in GB"
+}
+
+variable "project-rg" {
+  type                      = string
+  description               = "Resource Group project resources will be created in"
 }
