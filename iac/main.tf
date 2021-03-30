@@ -1,9 +1,8 @@
 locals {
   # All variables used in this file should be 
   # added as locals here 
-  prefix                = "${var.prefix}-0693"
+  prefix                = var.prefix
   location              = var.location
-  vault_name            = "${local.prefix}-vault"
   vmsize                = "Standard_${var.vmsize}"
   
   # Common tags should go here
@@ -16,7 +15,7 @@ locals {
 # Create a Virtual Network within the Resource Group
 resource "azurerm_virtual_network" "main" {
   name                = "${local.prefix}-vnet"
-  address_space       = ["10.100.0.0/16"]
+  address_space       = ["10.200.0.0/16"]
   resource_group_name = data.azurerm_resource_group.project-rg.name
   location            = local.location 
 }
@@ -49,13 +48,6 @@ resource "azurerm_network_security_group" "main" {
   }
 }
 
-resource "azurerm_public_ip" "pip" {
-  name                = "${local.prefix}-pip"
-  resource_group_name = data.azurerm_resource_group.project-rg.name
-  location            = local.location
-  allocation_method   = "Static"
-}
-
 resource "azurerm_network_interface" "main" {
   name                = "${local.prefix}-nic1"
   resource_group_name = data.azurerm_resource_group.project-rg.name
@@ -63,20 +55,6 @@ resource "azurerm_network_interface" "main" {
 
   ip_configuration {
     name                          = "primary"
-    subnet_id                     = azurerm_subnet.internal.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip.id
-  }
-}
-
-# Create a network internal interface for VMs and attach the PIP and the NSG
-resource "azurerm_network_interface" "internal" {
-  name                      = "${local.prefix}-nic2"
-  location                  = local.location 
-  resource_group_name       = data.azurerm_resource_group.project-rg.name 
-
-  ip_configuration {
-    name                          = "internal"
     subnet_id                     = azurerm_subnet.internal.id
     private_ip_address_allocation = "Dynamic"
   }
@@ -118,7 +96,7 @@ resource "azurerm_virtual_machine" "vm" {
     create_option                   = "Empty"
     lun                             = 10
     managed_disk_type               = "Premium_LRS"
-    disk_size_gb                    = 16000
+    disk_size_gb                    = var.datadisk_size_gb 
   }
   delete_data_disks_on_termination  = true
 
@@ -131,7 +109,7 @@ resource "azurerm_virtual_machine" "vm" {
   }
 
   os_profile {
-    computer_name  = "fmcsequencing"
+    computer_name  = "sequencing${local.prefix}"
     admin_username = "azureuser"
     admin_password = "Password123!"
     custom_data    = base64encode(data.template_file.cloud_init.rendered)
@@ -146,7 +124,7 @@ resource "azurerm_virtual_machine" "vm" {
       type        = "ssh"
       user        = "azureuser"
       private_key = tls_private_key.bootstrap_private_key.private_key_pem
-      host        = data.azurerm_public_ip.pip.ip_address
+      host        = azurerm_network_interface.main.private_ip_address 
     }
   }
 
@@ -160,7 +138,7 @@ resource "azurerm_virtual_machine" "vm" {
       type        = "ssh"
       user        = "azureuser"
       private_key = tls_private_key.bootstrap_private_key.private_key_pem
-      host        = data.azurerm_public_ip.pip.ip_address
+      host        = azurerm_network_interface.main.private_ip_address 
     }
   }
 }
@@ -174,38 +152,10 @@ resource "azurerm_user_assigned_identity" "managed_id" {
 }
 
 resource "azurerm_role_assignment" "blob_contributor" {
-  scope                 = data.azurerm_resource_group.project-sa.id 
+  scope                 = data.azurerm_resource_group.project-rg.id 
   role_definition_name  = "Storage Blob Data Contributor"
   principal_id          = azurerm_user_assigned_identity.managed_id.principal_id
 }
 
-output "private_key" {
-  value = tls_private_key.bootstrap_private_key.private_key_pem
-}
-
-output "vm_ip" {
-  value = data.azurerm_public_ip.pip.ip_address 
-}
-
-output "vm_rg" {
-  value = data.azurerm_resource_group.project-rg.name 
-}
-
-output "vm_name" {
-  value = azurerm_virtual_machine.vm.name
-}
-
-output "vm_datadisk" {
-  value = azurerm_virtual_machine.vm.storage_data_disk.0.name
-}
-
-# resource "azurerm_managed_disk" "data-disk" {
-#   name                  = "${local.prefix}-datadisk1"
-#   resource_group_name   = data.azurerm_resource_group.project-rg.name
-#   location              = local.location 
-#   storage_account_type  = "Premium_LRS"
-#   create_option         = "Empty"
-#   disk_size_gb          = 16000
-# }
 
 
