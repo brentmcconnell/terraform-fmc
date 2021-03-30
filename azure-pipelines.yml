@@ -99,6 +99,8 @@ jobs:
     displayName: 'Login az cli'
 
   - script: |
+      # Run Terraform
+      set -x
       export ARM_CLIENT_ID=$(SP-CLIENTID)
       export ARM_CLIENT_SECRET=$(SP-PASSWORD)
       export ARM_SUBSCRIPTION_ID=$(SP-SUBSCRIPTIONID)
@@ -116,6 +118,11 @@ jobs:
   - script: |
       # Setup and run the sequencing job
       set -x  
+      export ARM_CLIENT_ID=$(SP-CLIENTID)
+      export ARM_CLIENT_SECRET=$(SP-PASSWORD)
+      export ARM_SUBSCRIPTION_ID=$(SP-SUBSCRIPTIONID)
+      export ARM_TENANT_ID=$(SP-TENANTID)
+      export ARM_ACCESS_KEY=$(SA-ACCESS-KEY)
       cd iac
       terraform output -json private_key | jq -r . > ../ssh_key; chmod 0600 ../ssh_key
       terraform output -json vm_ip | jq -r . > ../vm_ip_address
@@ -212,7 +219,13 @@ jobs:
   
   - script: |
       # Tear down the environment
-      set -x
+      set -x  
+      export ARM_CLIENT_ID=$(SP-CLIENTID)
+      export ARM_CLIENT_SECRET=$(SP-PASSWORD)
+      export ARM_SUBSCRIPTION_ID=$(SP-SUBSCRIPTIONID)
+      export ARM_TENANT_ID=$(SP-TENANTID)
+      export ARM_ACCESS_KEY=$(SA-ACCESS-KEY)
+      cd iac
       cd iac
       echo '#######Terraform Destroy########'
       terraform destroy --auto-approve 
