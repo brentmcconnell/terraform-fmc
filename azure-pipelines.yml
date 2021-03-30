@@ -104,6 +104,7 @@ jobs:
       export ARM_SUBSCRIPTION_ID=$(SP-SUBSCRIPTIONID)
       export ARM_TENANT_ID=$(SP-TENANTID)
       export ARM_ACCESS_KEY=$(SA-ACCESS-KEY)
+      cd iac
       echo '#######Terraform Init########'
       terraform init
       echo '#######Terraform Plan########'
