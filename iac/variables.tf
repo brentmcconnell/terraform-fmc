@@ -14,7 +14,7 @@ variable "location" {
 }
 
 variable "datadisk_size_gb" {
-  type                      = integer
+  type                      = number 
   description               = "Size of data disk in GB"
 }
 
