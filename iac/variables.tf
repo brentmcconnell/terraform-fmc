@@ -3,6 +3,11 @@ variable "vmsize" {
   description               = "Size of VM to create"
 }
 
+variable "vmImage" {
+  type                      = string
+  description               = "VM image to use for work vm"
+}
+
 variable "prefix" {
   type                      = string
   description               = "A prefix used for all resources"

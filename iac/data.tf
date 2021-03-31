@@ -5,7 +5,7 @@ data "azurerm_resource_group" "project-rg" {
 }
 
 data "azurerm_image" "fmc-img" {
-  name                = "mySequencerImg-01a49f5"
+  name                = var.vmImage 
   resource_group_name = var.project-rg
 }
 
