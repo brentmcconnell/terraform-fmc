@@ -10,9 +10,11 @@ source activate denovo_asm
 if [ -z $1 ]; then
   # cd to input directory
   cd /data/input
+  WORKDIR=$RANDOM
 else
   mkdir -p /data/input/$1
   cd /data/input/$1
+  WORKDIR=$1
 fi
 
 # report what is in the input area for debuggin
@@ -25,7 +27,7 @@ echo $FASTQ_FILES
 NOW=$(date +'%m%d%Y-%H%M%S')
 
 time canu \
- -p ecoli -d /data/runs/$1/RUN \
+ -p $WORKDIR -d /data/runs/$1/RUN \
  genomeSize=4.8m \
  -pacbio $FASTQ_FILES 2>&1 | tee /data/runs/$1/run-$NOW.log
 
