@@ -1,6 +1,7 @@
 trigger: none
 pr: none
 
+
 jobs:
 - job: destroy
   timeoutInMinutes: 0
@@ -18,7 +19,7 @@ jobs:
       azureSubscription: 'TFSTATE-RG-READ-SP-terraform-fmc'
       KeyVaultName: 'mykeyzvault'
       SecretsFilter: 'sp-client-id-tf-0693,sp-cert-tf-0693,sp-tenant-id-tf-0693,sp-subscription-id-tf-0693,ak-backend-sa-0693'
-    displayName: 'Get key vault secrets'
+    displayName: 'Get KeyVault Secrets'
 
   # TERRAFORM VERSION
   - script: |
