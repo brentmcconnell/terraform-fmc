@@ -79,9 +79,11 @@ jobs:
   #Setup Custom Variables for pipeline
   - script: |
       GIT_COMMIT=$( git rev-parse --short HEAD )
-      NOW=$(date +'%m%d%Y-%H%M%S')
+      NOW=$( date +'%m%d%Y-%H%M%S' )
+      ENABLE_BASTION=$( echo ${{parameters.BASTION}} | tr [:upper:] [:lower:] )
       echo "##vso[task.setvariable variable=commitHash;isOutput=true]$GIT_COMMIT"
       echo "##vso[task.setvariable variable=now;isOutput=true]$NOW"
+      echo "##vso[task.setvariable variable=enable_bastion;isOutput=true]$ENABLE_BASTION"
     name: runtime_vars
     displayName: 'Set runtime variables for pipeline'
 
@@ -115,7 +117,7 @@ jobs:
       echo '#######Terraform Init########'
       terraform init
       echo '#######Terraform Plan########'
-      terraform plan -out="out.plan"  -var=${{parameters.BASTION}}
+      terraform plan -out="out.plan" -var="enable-bastion=$(runtime_vars.enable_bastion)"
       echo '#######Terraform Apply########'
       terraform apply out.plan
     displayName: 'Terraform Init, Plan and Apply '
