@@ -1,3 +1,9 @@
+variable "enable-bastion" {
+  type                    = bool
+  default                 = false
+  description             = "Decide if this will have a bastion or not"
+}
+
 variable "vmsize" {
   type                      = string
   description               = "Size of VM to create"

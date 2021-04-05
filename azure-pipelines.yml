@@ -56,6 +56,11 @@ parameters:
   type: boolean
   default: false
 
+- name: BASTION
+  displayName: 'Create a bastion host to connect?'
+  type: boolean
+  default: false
+
 variables:
 - name: DECODE_PERCENTS
   value: false
@@ -110,7 +115,7 @@ jobs:
       echo '#######Terraform Init########'
       terraform init
       echo '#######Terraform Plan########'
-      terraform plan -out="out.plan" 
+      terraform plan -out="out.plan"  -var=${{parameters.BASTION}}
       echo '#######Terraform Apply########'
       terraform apply out.plan
     displayName: 'Terraform Init, Plan and Apply '
