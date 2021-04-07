@@ -41,6 +41,11 @@ parameters:
   type: string
   default: "."
 
+- name: GENOME_SIZE
+  displayName: 'Size of Genome to use in calculations'
+  type: string
+  default: "5m"
+
 - name: DESTROY
   displayName: 'Destroy infra after successful run?'
   type: boolean
@@ -185,7 +190,7 @@ jobs:
       ls -la
       #Run the job script on the remote agent
       #cat ./job.sh | ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address)
-      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./job.sh ${{parameters.JOB_PREFIX}}
+      ssh -i ssh_key -o StrictHostKeyChecking=no azureuser@$(cat ./vm_ip_address) "/bin/bash -s"  <./job.sh ${{parameters.JOB_PREFIX}} ${{parameters.GENOME_SIZE}}
     displayName: 'Run workload processing job'
 
   - script: |

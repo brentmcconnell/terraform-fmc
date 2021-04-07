@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 source /etc/profile
 
 hostname
@@ -17,6 +17,13 @@ else
   WORKDIR=$1
 fi
 
+if [ -z $2 ]; then
+  # Set some default if nothing was passed in
+  GENOME_SIZE=4m
+else
+  GENOME_SIZE=$2
+fi
+
 # report what is in the input area for debuggin
 ls -la
 
@@ -28,17 +35,6 @@ NOW=$(date +'%m%d%Y-%H%M%S')
 
 time canu \
  -p $WORKDIR -d /data/runs/$1/RUN \
- genomeSize=4.8m \
+ genomeSize=$GENOME_SIZE \
  -pacbio $FASTQ_FILES 2>&1 | tee /data/runs/$1/run-$NOW.log
 
-
-# wget -nv https://sra-download.ncbi.nlm.nih.gov/traces/dra4/DRR/000208/DRR213641 -P /data/input
-
-# fasterq-dump /data/input/DRR213641 -O /data/input
-
-# time canu -p RKN -d /data/runs/$1/RKN_canu \
-#   genomeSize=0.2g corMhapFilterThreshold=0.0000000002 \
-#   mhapMemory=60g mhapBlockSize=500 \
-#   ovlMerDistinct=0.975 \
-#   corMhapOptions="--threshold 0.80 --num-hashes 512 --num-min-matches 3 --ordered-sketch-size 1000 --ordered-kmer-size 14 --min-olap-length 2000 --repeat-idf-scale 50" \
-#   -pacbio-raw $FASTQ_FILES | tee /data/runs/$1/run.log
