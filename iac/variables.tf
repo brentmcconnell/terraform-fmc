@@ -6,6 +6,7 @@ variable "enable-bastion" {
 
 variable "vmsize" {
   type                      = string
+  default                   = "D16as_v4"
   description               = "Size of VM to create"
 }
 

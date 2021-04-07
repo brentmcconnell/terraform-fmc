@@ -1,4 +1,3 @@
-vmsize = "D16as_v4"
 vmImage = "mySequencerImg-01a49f5"
 location = "eastus"
 prefix = "2429"

@@ -7,7 +7,7 @@ parameters:
 - name: VMSIZE
   displayName: 'VM Size'
   type: string
-  default: D48as_v4
+  default: D16as_v4
   values:
   - D96as_v4
   - D64as_v4
@@ -125,7 +125,7 @@ jobs:
       echo '#######Terraform Init########'
       terraform init
       echo '#######Terraform Plan########'
-      terraform plan -out="out.plan" -var="enable-bastion=$(runtime_vars.enable_bastion)"
+      terraform plan -out="out.plan" -var="enable-bastion=$(runtime_vars.enable_bastion)" -var="vmsize=${{parameters.VMSIZE}}"
       echo '#######Terraform Apply########'
       terraform apply out.plan
     displayName: 'Terraform Init, Plan and Apply '
