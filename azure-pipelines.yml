@@ -61,6 +61,11 @@ parameters:
   type: boolean
   default: false
 
+- name: DEBUG
+  displayName: 'Output DEBUG information?'
+  type: boolean
+  default: false
+
 variables:
 - name: DECODE_PERCENTS
   value: false
@@ -114,6 +119,9 @@ jobs:
       export ARM_TENANT_ID=$(SP-TENANTID)
       export ARM_ACCESS_KEY=$(SA-ACCESS-KEY)
       cd iac
+      if [ ${{parameters.DEBUG}} == "True" ]; then
+        export TF_LOG=DEBUG
+      fi
       echo '#######Terraform Init########'
       terraform init
       echo '#######Terraform Plan########'
