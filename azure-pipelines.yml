@@ -139,6 +139,9 @@ jobs:
       export ARM_TENANT_ID=$(SP-TENANTID)
       export ARM_ACCESS_KEY=$(SA-ACCESS-KEY)
       cd iac
+      if [ ${{parameters.DEBUG}} == "True" ]; then
+        export TF_LOG=DEBUG
+      fi
       terraform output -json private_key | jq -r . > ../ssh_key; chmod 0600 ../ssh_key
       terraform output -json vm_ip | jq -r . > ../vm_ip_address
       terraform output -json vm_name | jq -r . > ../vm_name 
@@ -241,7 +244,9 @@ jobs:
       export ARM_TENANT_ID=$(SP-TENANTID)
       export ARM_ACCESS_KEY=$(SA-ACCESS-KEY)
       cd iac
-      cd iac
+      if [ ${{parameters.DEBUG}} == "True" ]; then
+        export TF_LOG=DEBUG
+      fi
       echo '#######Terraform Destroy########'
       terraform destroy --auto-approve 
     condition: ${{ parameters.destroy }}
