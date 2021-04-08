@@ -152,6 +152,7 @@ jobs:
       terraform output -json vm_name | jq -r . > ../vm_name 
       terraform output -json vm_rg | jq -r . > ../vm_rg
       terraform output -json vm_datadisk | jq -r . > ../vm_datadisk
+      terraform output -json managed_identity_id | jq -r . > ../managed_identity_id
     displayName: 'Get outputs needed by all scripts and store locally'
   
   - script: |
@@ -177,7 +178,7 @@ jobs:
       set -x
       echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > download-batch.sh
-        az login --identity
+        az login --identity -u $(cat managed_identity_id)
         az storage blob download-batch --source ${{parameters.INPUT_CONTAINER}} --pattern ${{parameters.INPUT_PATH}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination /data/input/${{parameters.JOB_PREFIX}} --auth-mode login
       EOF
       cat download-batch.sh
@@ -207,7 +208,7 @@ jobs:
       set -x
       echo "Using Storage Account ${{parameters.STORAGE_ACCOUNT}}"
       cat <<-EOF > upload-batch.sh
-        az login --identity
+        az login --identity -u $(cat managed_identity_id)
         #upload run results
         az storage blob upload-batch -d ${{parameters.OUTPUT_CONTAINER}} -s /data/assembly/${{parameters.JOB_PREFIX}} --account-name ${{parameters.STORAGE_ACCOUNT}} --destination-path ${{parameters.OUTPUT_PATH}}/$(runtime_vars.now) --auth-mode login
         #upload job log
