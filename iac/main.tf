@@ -92,7 +92,7 @@ resource "azurerm_virtual_machine" "vm" {
 
   boot_diagnostics {
     enabled     = true
-    storage_url = azurerm_storage_account.dsa.primary_blob_endpoint
+    storage_uri = azurerm_storage_account.dsa.primary_blob_endpoint
   }
 
   storage_image_reference {
