@@ -18,8 +18,9 @@ else
 fi
 
 if [ -z $2 ]; then
-  # Set some default if nothing was passed in
-  GENOME_SIZE=4m
+  # Exit if no Genome Size was passed in
+  echo "ERROR: No GENOME_SIZE was passed into the job.sh script.  Required parameter missing!"
+  exit 1
 else
   GENOME_SIZE=$2
 fi
