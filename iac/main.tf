@@ -90,10 +90,10 @@ resource "azurerm_virtual_machine" "vm" {
     identity_ids = [azurerm_user_assigned_identity.managed_id.id]
   }
 
-  boot_diagnostics {
-    enabled     = true
-    storage_uri = azurerm_storage_account.dsa.primary_blob_endpoint
-  }
+  # boot_diagnostics {
+  #   enabled     = true
+  #   storage_uri = azurerm_storage_account.dsa.primary_blob_endpoint
+  # }
 
   storage_image_reference {
     id = data.azurerm_image.fmc-img.id 
@@ -145,6 +145,10 @@ resource "azurerm_virtual_machine" "vm" {
     }
   }
 
+  provisioner "local-exec" {
+    command = "az vm boot-diagnostics enable -n ${azurerm_virtual_machine.vm.name} -g ${data.azurerm_resource_group.project-rg.name} --storage ${azurerm_storage_account.dsa.primary_blob_endpoint}"
+  }
+ 
   provisioner "remote-exec" {
     inline = [
       "set -x",
@@ -158,6 +162,8 @@ resource "azurerm_virtual_machine" "vm" {
       host        = azurerm_network_interface.main.private_ip_address 
     }
   }
+
+  depends_on = [azurerm_storage_account.dsa]
 }
 
 #Managed Identity so that VM can access storage account easily
