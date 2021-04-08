@@ -4,6 +4,7 @@ locals {
   prefix                = var.prefix
   location              = var.location
   vmsize                = "Standard_${var.vmsize}"
+  sa-name               = "${local.prefix}diagnosticlogs"
   
   # Common tags should go here
   tags           = {
@@ -48,6 +49,17 @@ resource "azurerm_network_security_group" "main" {
   }
 }
 
+resource "azurerm_storage_account" "dsa" {
+  name                     = local.sa-name 
+  resource_group_name      = data.azurerm_resource_group.project-rg.name
+
+  location                 = local.location 
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+
+  tags = local.tags
+}
+
 resource "azurerm_network_interface" "main" {
   name                = "${local.prefix}-nic1"
   resource_group_name = data.azurerm_resource_group.project-rg.name
@@ -76,6 +88,11 @@ resource "azurerm_virtual_machine" "vm" {
   identity {
     type = "UserAssigned"
     identity_ids = [azurerm_user_assigned_identity.managed_id.id]
+  }
+
+  boot_diagnostics {
+    enabled     = true
+    storage_url = azurerm_storage_account.dsa.primary_blob_endpoint
   }
 
   storage_image_reference {
