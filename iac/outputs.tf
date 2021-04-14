@@ -20,6 +20,7 @@ output "proj-rg-id" {
 
 output "private_key" {
   value = tls_private_key.bootstrap_private_key.private_key_pem
+  sensitive = true
 }
 
 output "vm_ip" {
