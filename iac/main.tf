@@ -1,7 +1,7 @@
 locals {
   # All variables used in this file should be 
   # added as locals here 
-  prefix                = var.prefix
+  prefix                = lower(var.prefix)
   location              = var.location
   vmsize                = "Standard_${var.vmsize}"
   sa-name               = "${local.prefix}diagnosticlogs"
