@@ -74,6 +74,7 @@ parameters:
 variables:
 - name: DECODE_PERCENTS
   value: false
+- group: AZURE_INFO
 
 trigger: none
 pr: none
@@ -81,9 +82,8 @@ pr: none
 jobs:
 - job: sequencing
   timeoutInMinutes: 0
-  pool: ado-agents 
-  # pool:
-  #   vmImage: 'ubuntu-latest'
+  pool: 
+    name: ado-agents 
 
   steps:
   #Setup Custom Variables for pipeline
