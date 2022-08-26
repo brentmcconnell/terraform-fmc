@@ -4,6 +4,11 @@ parameters:
   type: string
   default: "fmc"
 
+- name: INPUT_CONTAINER
+  displayName: 'Input Container Name'
+  type: string
+  default: "input"
+
 - name: VMSIZE
   displayName: 'VM Size'
   type: string
