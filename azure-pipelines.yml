@@ -83,14 +83,8 @@ jobs:
 - job: sequencing
   timeoutInMinutes: 0
 
-  steps:
-  - script: |
-      set -x
-      echo ${{parameters.JOB_PREFIX}}
-      echo ${{parameters.INPUT_PATH}}
-      echo ${{parameters.STORAGE_ACCOUNT}}
-      echo ${{parameters.JOB_PREFIX}}
-      echo ${{parameters.GENOME_SIZE}}
-      echo ${{parameters.OUTPUT_CONTAINER}}
-    displayName: 'Echo Parameters'
+  steps: 
+  - ${{ each parameter in parameters }}:
+    - script: echo ${{ parameter.Key }} 
+    - script: echo ${{ parameter.Value }}
 
