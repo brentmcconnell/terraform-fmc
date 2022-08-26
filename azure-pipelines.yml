@@ -74,6 +74,7 @@ parameters:
 variables:
 - name: DECODE_PERCENTS
   value: false
+- group: AZURE_INFO
 
 trigger: none
 pr: none
