@@ -38,4 +38,4 @@ jobs:
     - script: echo ${{ parameter.Key }} - ${{ parameter.Value }}
 
   - script: |
-      sleep 1800
+      sleep 3600
